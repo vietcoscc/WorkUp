@@ -7,5 +7,5 @@ import com.example.viet.workup.base.MvpView;
  */
 
 public interface BoardOptionMvpView extends MvpView {
-    void dislayDataNotified();
+    void removeItem(int position);
 }

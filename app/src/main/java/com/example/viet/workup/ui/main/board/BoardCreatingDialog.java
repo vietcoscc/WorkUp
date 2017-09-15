@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.main.creating;
+package com.example.viet.workup.ui.main.board;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -38,8 +38,6 @@ public class BoardCreatingDialog extends BaseDialogFragment implements BoardCrea
     Spinner spinner;
     @BindView(R.id.checkbox)
     CheckBox checkBox;
-
-    private AlertDialog mDialog;
     private Context mContext;
     @Inject
     BoardCreatingPresenter<BoardCreatingMvpView> mPresenter;
@@ -64,24 +62,26 @@ public class BoardCreatingDialog extends BaseDialogFragment implements BoardCrea
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
         builder.setMessage("Create mDialog");
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (TextUtils.isEmpty(edtName.getText().toString())) {
-                    Toast.makeText(mContext, "Board name must not empty !", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mPresenter.onCreateBoardButtonClick(edtName.getText().toString(), spinner.getSelectedItem().toString(), checkBox.isChecked());
-            }
-        });
+        builder.setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Create", null);
         mDialog = builder.create();
-
+        mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                final Button button = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (TextUtils.isEmpty(edtName.getText().toString())) {
+                            Toast.makeText(mContext, "Board name must not empty !", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        mPresenter.onCreateBoardButtonClick(edtName.getText().toString(), spinner.getSelectedItem().toString(), checkBox.isChecked());
+                        button.setClickable(false);
+                    }
+                });
+            }
+        });
         return mDialog;
     }
 

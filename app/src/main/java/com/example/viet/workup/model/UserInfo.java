@@ -13,6 +13,9 @@ public class UserInfo {
     private String photoUrl;
     private String uid;
 
+    public UserInfo() {
+    }
+
     public UserInfo(String displayName,
                     String email,
                     String joinedDate,

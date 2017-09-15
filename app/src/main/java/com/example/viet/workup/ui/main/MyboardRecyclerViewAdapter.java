@@ -3,10 +3,12 @@ package com.example.viet.workup.ui.main;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -66,10 +68,10 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         ImageView ivBackground;
         @BindView(R.id.ivStar)
         ImageView ivStar;
+
         public MyboardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -78,6 +80,7 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                 }
             });
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -101,7 +104,19 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             } else {
                 ivStar.setVisibility(View.INVISIBLE);
             }
+            AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(context,android.R.anim.slide_in_left);
+            itemView.startAnimation(animation);
         }
+    }
+
+    public void addItem(Board board) {
+        mArrBoard.add(board);
+        notifyItemInserted(mArrBoard.size());
+    }
+
+    public void removeItem(int position) {
+        mArrBoard.remove(position);
+        notifyItemRemoved(position);
     }
 
     public void setmOnItemClickListenter(Listener.OnItemClickListenter mOnItemClickListenter) {

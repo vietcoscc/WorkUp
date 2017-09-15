@@ -7,4 +7,5 @@ import com.example.viet.workup.base.MvpView;
  */
 
 public interface AddingMvpView extends MvpView {
+
 }

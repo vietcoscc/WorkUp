@@ -21,8 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.viet.workup.utils.AccountUtils.buildProgressDialog;
 import static com.example.viet.workup.utils.AccountUtils.isValidEmail;
@@ -38,7 +36,6 @@ public class AccountManager {
     private static final String TAG = "AccountManager";
     private static AccountManager sInstance;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
 
     public static AccountManager getsInstance() {
         if (sInstance == null) {
@@ -90,6 +87,7 @@ public class AccountManager {
                             Toast.makeText(context, "isSuccessful", Toast.LENGTH_SHORT).show();
                             Log.i(TAG, "isSuccessful");
                             Intent intent = new Intent(context, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);
                             progressDialog.dismiss();
                         }
@@ -184,6 +182,7 @@ public class AccountManager {
                                     Toast.makeText(context, "signInWithCredential:success", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
                                     Intent intent = new Intent(context, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     context.startActivity(intent);
 
                                 }

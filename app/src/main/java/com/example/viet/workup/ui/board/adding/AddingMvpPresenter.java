@@ -7,4 +7,6 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface AddingMvpPresenter<V extends AddingMvpView> extends MvpPresenter<V> {
+    void onButtonAddListClick(String title,String boardKey);
+
 }

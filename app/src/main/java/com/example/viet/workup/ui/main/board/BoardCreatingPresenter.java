@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.main.creating;
+package com.example.viet.workup.ui.main.board;
 
 import android.support.annotation.NonNull;
 

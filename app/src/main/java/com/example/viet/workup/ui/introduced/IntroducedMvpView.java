@@ -12,4 +12,5 @@ public interface IntroducedMvpView extends MvpView {
     void showLoginActivity();
 
     void showRegisterActivity();
+    void showMainActivity();
 }

@@ -12,9 +12,13 @@ import com.example.viet.workup.model.Board;
 public interface MainMvpView extends MvpView {
     void showDialogBoard();
 
+    void showIntroduce();
+
     void showStarBoardReceived(Board board);
 
     void showUnstarBoardReceived(Board board);
 
-    void showBoardOptionMenu(View view, int position);
+    void showUnstarBoardOptionMenu(View view, int position);
+
+    void showStarBoardOptionMene(View view, int position);
 }

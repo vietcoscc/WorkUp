@@ -16,7 +16,7 @@ import com.example.viet.workup.di.module.ActivityModule;
 
 public class BaseActivity extends AppCompatActivity implements MvpView {
     private ActivityComponent mActivityComponent;
-    private ProgressDialog progressDialog;
+    protected ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

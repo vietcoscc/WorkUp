@@ -8,6 +8,7 @@ import android.view.View;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BasePopupMenu;
 import com.example.viet.workup.model.Board;
+import com.example.viet.workup.ui.main.MyboardRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -65,7 +66,8 @@ public class BoardOptionMenu extends BasePopupMenu implements BoardOptionMvpView
 
 
     @Override
-    public void dislayDataNotified() {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+    public void removeItem(int position) {
+        MyboardRecyclerViewAdapter adapter = (MyboardRecyclerViewAdapter) mRecyclerView.getAdapter();
+        adapter.removeItem(position);
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.viet.workup">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,11 +29,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity" />
-        <activity android:name=".ui.board.BoardActivity">
+        <activity
+            android:name=".ui.board.BoardActivity"
+            android:windowSoftInputMode="adjustNothing">
 
         </activity>
         <activity android:name=".ui.profile.ProfileActivity" />
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".ui.work.WorkActivity"
             android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme">

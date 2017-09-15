@@ -15,9 +15,9 @@ import com.example.viet.workup.di.module.ActivityModule;
  */
 
 public class BasePopupMenu extends PopupMenu implements MvpView {
-    private Context mContext;
+    protected Context mContext;
     private ActivityComponent mActivityComponent;
-    private ProgressDialog mProgressDialog;
+    protected ProgressDialog mProgressDialog;
 
     public BasePopupMenu(Context context, View anchor) {
         super(context, anchor);

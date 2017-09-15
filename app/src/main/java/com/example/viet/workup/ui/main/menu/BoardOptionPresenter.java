@@ -29,6 +29,7 @@ public class BoardOptionPresenter<V extends BoardOptionMvpView> extends BasePres
     @Override
     public void onUnstarItemClick(final Board board, final ArrayList<Board> arrBoard, final int position) {
         getmMvpView().showProgress();
+        board.setStar(false);
         unstarBoardRef(mAccountManager.getCurrentUser().getUid()).child(board.getKey())
                 .setValue(board)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -40,8 +41,7 @@ public class BoardOptionPresenter<V extends BoardOptionMvpView> extends BasePres
                             @Override
                             public void onSuccess(Void aVoid) {
                                 if (getmMvpView() != null) {
-                                    arrBoard.remove(position);
-                                    getmMvpView().dislayDataNotified();
+                                    getmMvpView().removeItem(position);
                                     getmMvpView().hideProgress();
                                     getmMvpView().showMessge("onSuccess");
                                 }
@@ -71,6 +71,7 @@ public class BoardOptionPresenter<V extends BoardOptionMvpView> extends BasePres
     @Override
     public void onStarItemClick(final Board board, final ArrayList<Board> arrBoard, final int position) {
         getmMvpView().showProgress();
+        board.setStar(true);
         starBoardRef(mAccountManager.getCurrentUser().getUid()).child(board.getKey())
                 .setValue(board)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -82,8 +83,7 @@ public class BoardOptionPresenter<V extends BoardOptionMvpView> extends BasePres
                             @Override
                             public void onSuccess(Void aVoid) {
                                 if (getmMvpView() != null) {
-                                    getmMvpView().dislayDataNotified();
-                                    arrBoard.remove(position);
+                                    getmMvpView().removeItem(position);
                                     getmMvpView().hideProgress();
                                     getmMvpView().showMessge("onSuccess");
                                 }

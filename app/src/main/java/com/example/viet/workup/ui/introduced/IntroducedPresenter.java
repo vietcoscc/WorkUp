@@ -21,11 +21,11 @@ public class IntroducedPresenter<V extends IntroducedMvpView> extends BasePresen
     }
 
     @Override
-    public void onCheckLogin(Context context) {
+    public void onCheckLogin( ) {
         if (mAccountManager.getmAuth() != null && mAccountManager.getmAuth().getCurrentUser() != null) {
-            Intent intent = new Intent(context, MainActivity.class);
-            context.startActivity(intent);
+            getmMvpView().showMainActivity();
             getmMvpView().showResultLogin("Loged in");
+
         } else {
             getmMvpView().showResultLogin("...");
         }

@@ -9,7 +9,7 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface IntroducedMvpPresenter<V extends IntroducedMvpView> extends MvpPresenter<V> {
-    void onCheckLogin(Context context);
+    void onCheckLogin( );
 
     void onButtonLoginClick();
 

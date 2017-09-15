@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.main.creating;
+package com.example.viet.workup.ui.main.board;
 
 import com.example.viet.workup.base.MvpPresenter;
 

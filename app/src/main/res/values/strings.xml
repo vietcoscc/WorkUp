@@ -19,4 +19,10 @@
     <string name="btnAddCard">Add card</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="display_name">Display name</string>
+    <string name="action_logout">Logout</string>
+    <string name="title" >Title</string>
+    <string name="description">Description</string>
+    <string name="action_add">Add card</string>
+    <string name="action_move_list">Move list</string>
+    <string name="action_archive_list">Archive list</string>
 </resources>

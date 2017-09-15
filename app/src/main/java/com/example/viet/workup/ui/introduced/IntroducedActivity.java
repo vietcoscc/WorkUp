@@ -1,6 +1,5 @@
 package com.example.viet.workup.ui.introduced;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseActivity;
 import com.example.viet.workup.ui.login.LoginActivity;
+import com.example.viet.workup.ui.main.MainActivity;
 import com.example.viet.workup.ui.register.RegisterActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -41,7 +41,7 @@ public class IntroducedActivity extends BaseActivity implements IntroducedMvpVie
         initViews();
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
-        mPresenter.onCheckLogin(this);
+        mPresenter.onCheckLogin();
     }
 
     private void initViews() {
@@ -92,6 +92,14 @@ public class IntroducedActivity extends BaseActivity implements IntroducedMvpVie
     public void showRegisterActivity() {
         Intent intent1 = new Intent(this, RegisterActivity.class);
         startActivity(intent1);
+    }
+
+    @Override
+    public void showMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
 
 }

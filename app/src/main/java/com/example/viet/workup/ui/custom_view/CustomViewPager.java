@@ -246,9 +246,7 @@ public class CustomViewPager extends ViewPager {
     @Override
 
     protected void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
-        Log.i(TAG,"onDraw");
         if (!insufficientMemory && parallaxEnabled) {
 
             if (current_position == -1)
