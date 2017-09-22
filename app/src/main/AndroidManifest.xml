@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -36,12 +38,16 @@
         </activity>
         <activity android:name=".ui.profile.ProfileActivity" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".ui.work.WorkActivity"
             android:label="@string/title_activity_detail"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
+        <activity android:name=".ui.image.main.ImageActivity"></activity>
+        <activity
+            android:name=".ui.image.item.ItemActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
     </application>
 
 </manifest>

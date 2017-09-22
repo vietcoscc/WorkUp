@@ -1,6 +1,7 @@
 package com.example.viet.workup.utils;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by viet on 06/09/2017.
@@ -37,5 +38,9 @@ public class CalendarUtils {
 
     public static String getCurrentDate() {
         return getDay() + "-" + getMonth() + "-" + getYear();
+    }
+
+    public static Date getCurrentDay() {
+        return new Date(getYear(), getMonth(), getDay());
     }
 }

@@ -101,5 +101,9 @@ public class IntroducedActivity extends BaseActivity implements IntroducedMvpVie
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
     }
-
+    @Override
+    public void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
+    }
 }

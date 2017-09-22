@@ -1,11 +1,7 @@
 package com.example.viet.workup.ui.introduced;
 
-import android.content.Context;
-import android.content.Intent;
-
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
-import com.example.viet.workup.ui.main.MainActivity;
 
 import javax.inject.Inject;
 
@@ -21,12 +17,20 @@ public class IntroducedPresenter<V extends IntroducedMvpView> extends BasePresen
     }
 
     @Override
-    public void onCheckLogin( ) {
+    public void onCheckLogin() {
+
         if (mAccountManager.getmAuth() != null && mAccountManager.getmAuth().getCurrentUser() != null) {
+
             getmMvpView().showMainActivity();
+            if (getmMvpView() == null) {
+                return;
+            }
             getmMvpView().showResultLogin("Loged in");
 
         } else {
+            if (getmMvpView() == null) {
+                return;
+            }
             getmMvpView().showResultLogin("...");
         }
     }

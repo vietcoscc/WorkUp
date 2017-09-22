@@ -44,6 +44,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.BOARD;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.STAR_BOARD;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.UID;
 
 public class MainActivity extends BaseActivity implements MainMvpView, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -58,15 +60,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     RecyclerView recyclerViewUnstarBoard;
     @BindView(R.id.recyclerViewStarBoard)
     RecyclerView recyclerViewStarBoard;
-
+    @BindView(R.id.recyclerViewOtherrBoard)
+    RecyclerView recyclerViewOtherrBoard;
     @Inject
     MainPresenter<MainMvpView> mPresenter;
-
+    //
     private ArrayList<Board> mArrUnstarBoard = new ArrayList<>();
     private MyboardRecyclerViewAdapter mUnstarBoardAdapter;
-
     private ArrayList<Board> mArrStarBoard = new ArrayList<>();
     private MyboardRecyclerViewAdapter mStarBoardAdapter;
+    private ArrayList<Board> mArrOtherBoard = new ArrayList<>();
+    private MyboardRecyclerViewAdapter mOtherBoardAdapter;
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +90,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         fab.setOnClickListener(this);
         DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
         defaultItemAnimator.setAddDuration(1000);
-
+        //recyclerViewUnstarBoard
         recyclerViewUnstarBoard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(recyclerViewUnstarBoard, false);
         mUnstarBoardAdapter = new MyboardRecyclerViewAdapter(mArrUnstarBoard, true);
@@ -99,12 +104,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                intent.putExtra(UID, mArrUnstarBoard.get(position).getParentKey());
                 intent.putExtra(BOARD, mArrUnstarBoard.get(position).getKey());
+                intent.putExtra(STAR_BOARD, mArrUnstarBoard.get(position).isStar());
                 startActivity(intent);
             }
         });
         recyclerViewUnstarBoard.setAdapter(mUnstarBoardAdapter);
-
+        // recyclerViewStarBoard
         recyclerViewStarBoard.setLayoutManager(new GridLayoutManager(this, 2));
         ViewCompat.setNestedScrollingEnabled(recyclerViewStarBoard, false);
         mStarBoardAdapter = new MyboardRecyclerViewAdapter(mArrStarBoard, false);
@@ -118,11 +125,35 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                intent.putExtra(UID, mArrStarBoard.get(position).getParentKey());
                 intent.putExtra(BOARD, mArrStarBoard.get(position).getKey());
+                intent.putExtra(STAR_BOARD, mArrStarBoard.get(position).isStar());
                 startActivity(intent);
             }
         });
         recyclerViewStarBoard.setAdapter(mStarBoardAdapter);
+        //
+        recyclerViewOtherrBoard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        ViewCompat.setNestedScrollingEnabled(recyclerViewOtherrBoard, false);
+        mOtherBoardAdapter = new MyboardRecyclerViewAdapter(mArrOtherBoard, true);
+//        mOtherBoardAdapter.setmOnItemLongClickListener(new Listener.OnItemLongClickListener() {
+//            @Override
+//            public void onLongClick(View view, int position) {
+//                showStarBoardOptionMene(view, position);
+//            }
+//        });
+        mOtherBoardAdapter.setmOnItemClickListenter(new Listener.OnItemClickListenter() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                intent.putExtra(UID, mArrOtherBoard.get(position).getParentKey());
+                intent.putExtra(BOARD, mArrOtherBoard.get(position).getKey());
+                intent.putExtra(STAR_BOARD, mArrOtherBoard.get(position).isStar());
+                startActivity(intent);
+            }
+        });
+        recyclerViewOtherrBoard.setAdapter(mOtherBoardAdapter);
+
     }
 
     private void initToolbar() {
@@ -176,41 +207,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
 
     @Override
     public void showDialogBoard() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
-//        builder.setMessage("Create board");
-//        View view = LayoutInflater.from(this).inflate(R.layout.dialog_board_creating, null);
-//        builder.setView(view);
-//        final EditText edtName = view.findViewById(R.id.edtName);
-//        final Spinner spinner = view.findViewById(R.id.spinner);
-//        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"No group"});
-//        spinner.setAdapter(arrayAdapter);
-//        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                showProgress();
-//                mPresenter.onCreateBoardButtonClick(edtName.getText().toString(), spinner.getSelectedItem().toString());
-//            }
-//        });
-//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-//        builder.create().show();
-//        edtName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                edtName.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        InputMethodManager inputMethodManager = (InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        inputMethodManager.showSoftInput(edtName, InputMethodManager.SHOW_IMPLICIT);
-//                    }
-//                });
-//            }
-//        });
-//        edtName.requestFocus();
         BoardCreatingDialog dialog = BoardCreatingDialog.newInstance();
         dialog.show(getSupportFragmentManager(), "");
     }
@@ -224,13 +220,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
 
     @Override
     public void showStarBoardReceived(Board board) {
-
         mStarBoardAdapter.addItem(board);
     }
 
     @Override
     public void showUnstarBoardReceived(Board board) {
         mUnstarBoardAdapter.addItem(board);
+    }
+
+    @Override
+    public void showOtherBoardReceived(Board board) {
+        mOtherBoardAdapter.addItem(board);
     }
 
     @Override
@@ -255,13 +255,19 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     public Observable<Drawable> getDrawableObservable(final String url) {
         return Observable.fromCallable(new Callable<Drawable>() {
             @Override
-            public Drawable call() throws Exception {
-                URL u = new URL(url);
-                URLConnection connection = u.openConnection();
-                InputStream inputStream = connection.getInputStream();
-                Drawable drawable = new BitmapDrawable(inputStream);
-                return drawable;
+            public Drawable call() {
+                try {
+                    URL u = new URL(url);
+                    URLConnection connection = u.openConnection();
+                    InputStream inputStream = connection.getInputStream();
+                    Drawable drawable = new BitmapDrawable(inputStream);
+                    return drawable;
+                } catch (Exception e) {
+                    finish();
+                }
+                return null;
             }
         });
     }
+
 }

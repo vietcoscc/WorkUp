@@ -10,12 +10,11 @@
 
     <include layout="@layout/app_bar_board" />
 
-    <LinearLayout
-        android:animateLayoutChanges="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav"
+        app:menu="@menu/board_menu"
         android:layout_gravity="right"
-        android:background="@color/white">
-    </LinearLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
 
 </android.support.v4.widget.DrawerLayout>

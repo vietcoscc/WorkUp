@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseDialogFragment;
+import com.example.viet.workup.utils.DataUtils;
 
 import javax.inject.Inject;
 
@@ -79,7 +81,14 @@ public class WorkListDialogFragment extends BaseDialogFragment implements WorkLi
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mPresenter.onAddWorkList(mCardKey, edtTitle.getText().toString());
+                        if (isOnProgress()) {
+                            return;
+                        }
+                        if (DataUtils.isWorkListNameValid(edtTitle.getText().toString())) {
+                            mPresenter.onAddWorkList(mCardKey, edtTitle.getText().toString());
+                        } else {
+                            Toast.makeText(mContext, "WorkList name invalid", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -95,5 +104,10 @@ public class WorkListDialogFragment extends BaseDialogFragment implements WorkLi
     @Override
     public void showFailure() {
 
+    }
+    @Override
+    public void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }

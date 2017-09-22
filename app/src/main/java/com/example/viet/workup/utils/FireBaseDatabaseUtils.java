@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class FireBaseDatabaseUtils {
+    public static final String UID ="uid";
     public static final String ACCOUNT = "Account";
     public static final String BOARD = "Board";
     public static final String CARD_LIST = "CardList";
@@ -23,6 +24,16 @@ public class FireBaseDatabaseUtils {
     private static final String ARR_WORK_LIST = "arrWorkList";
     private static final String ARR_COMMENT_LIST = "arrComment";
     private static final String DUE_DATE = "dueDate";
+    private static final String MEMBER = "member";
+    private static final String ARR_TASK_REF = "arrTask";
+    private static final String HAS_DONE = "hasDone";
+    private static final String TITLE = "title";
+    private static final String DESCRIPTION = "description";
+    private static final String COMMENT_COUNT = "commentCount";
+    private static final String COVER_IMAGE = "coverImageUrl";
+    private static final String IMAGE_URL = "imageUrl";
+    private static final String IS_STAR = "star";
+    private static final String OTHER_BOARD = "otherBoard";
 
     private static DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -47,8 +58,32 @@ public class FireBaseDatabaseUtils {
         return boardRef().child(UNSTAR_BOARD).child(uid);
     }
 
+    public static DatabaseReference otherBoardRef(String uid) {
+        return boardRef().child(OTHER_BOARD).child(uid);
+    }
+
     public static DatabaseReference boardDataRef(String boardKey) {
         return mRootRef.child(BOARD_DATA).child(boardKey);
+    }
+
+    public static DatabaseReference boardImageUrlRef(boolean isStar, String uid, String boardKey) {
+        if (isStar) {
+            return starBoardRef(uid).child(boardKey).child(IMAGE_URL);
+        } else {
+            return unstarBoardRef(uid).child(boardKey).child(IMAGE_URL);
+        }
+    }
+
+    public static DatabaseReference boardIsStarRef(boolean isStar, String uid, String boardKey) {
+        if (isStar) {
+            return starBoardRef(uid).child(boardKey).child(IS_STAR);
+        } else {
+            return unstarBoardRef(uid).child(boardKey).child(IS_STAR);
+        }
+    }
+
+    public static DatabaseReference memberBoardRef(String boardKey) {
+        return mRootRef.child(BOARD_DATA).child(boardKey).child(MEMBER);
     }
 
     public static DatabaseReference cardListRef(String boardKey, String cardListKey) {
@@ -67,6 +102,22 @@ public class FireBaseDatabaseUtils {
         return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(ARR_LABEL);
     }
 
+    public static DatabaseReference coverImageCardRef(String cardKey) {
+        return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(COVER_IMAGE);
+    }
+
+    public static DatabaseReference titleCardRed(String cardKey) {
+        return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(TITLE);
+    }
+
+    public static DatabaseReference commentCountRef(String cardKey) {
+        return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(COMMENT_COUNT);
+    }
+
+    public static DatabaseReference descriptionCardRef(String cardKey) {
+        return cardDataRef(cardKey).child(DESCRIPTION);
+    }
+
     public static DatabaseReference dueDateCardRef(String cardKey) {
         return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(DUE_DATE);
     }
@@ -77,6 +128,18 @@ public class FireBaseDatabaseUtils {
 
     public static DatabaseReference arrWorkListRef(String cardKey) {
         return cardDataRef(cardKey).child(ARR_WORK_LIST);
+    }
+
+    public static DatabaseReference arrTaskListRef(String cardKey, String workListPosition) {
+        return arrWorkListRef(cardKey).child(workListPosition).child(ARR_TASK_REF);
+    }
+
+    public static DatabaseReference taskRef(String cardKey, String workListPosition, String taskPosiTion) {
+        return arrWorkListRef(cardKey).child(workListPosition).child(ARR_TASK_REF).child(taskPosiTion);
+    }
+
+    public static DatabaseReference taskHasDoneRef(String cardKey, String workListPosition, String taskPosiTion) {
+        return taskRef(cardKey, workListPosition, taskPosiTion).child(HAS_DONE);
     }
 
     public static DatabaseReference arrCommentListRef(String cardKey) {

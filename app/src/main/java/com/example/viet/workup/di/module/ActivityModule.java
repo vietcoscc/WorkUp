@@ -3,21 +3,46 @@ package com.example.viet.workup.di.module;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.viet.workup.di.PerActivity;
 import com.example.viet.workup.ui.board.BoardMvpPresenter;
 import com.example.viet.workup.ui.board.BoardMvpView;
 import com.example.viet.workup.ui.board.BoardPresenter;
-import com.example.viet.workup.ui.board.adding.AddingMvpPresenter;
-import com.example.viet.workup.ui.board.adding.AddingMvpView;
-import com.example.viet.workup.ui.board.adding.AddingPresenter;
+import com.example.viet.workup.ui.board.add_member.MemberAddingMvpPresenter;
+import com.example.viet.workup.ui.board.add_member.MemberAddingMvpView;
+import com.example.viet.workup.ui.board.add_member.MemberAddingPresenter;
+import com.example.viet.workup.ui.board.background.BackgroundMvpPresenter;
+import com.example.viet.workup.ui.board.background.BackgroundMvpView;
+import com.example.viet.workup.ui.board.background.BackgroundPresenter;
 import com.example.viet.workup.ui.board.card.CardMvpPresenter;
 import com.example.viet.workup.ui.board.card.CardMvpView;
 import com.example.viet.workup.ui.board.card.CardPresenter;
-import com.example.viet.workup.ui.board.card.create_dialog.CardCreatingMvpPresenter;
-import com.example.viet.workup.ui.board.card.create_dialog.CardCreatingMvpView;
-import com.example.viet.workup.ui.board.card.create_dialog.CardCreatingPresenter;
 import com.example.viet.workup.ui.board.card.menu.CardListMvpPresenter;
 import com.example.viet.workup.ui.board.card.menu.CardListMvpView;
 import com.example.viet.workup.ui.board.card.menu.CardListPresenter;
+import com.example.viet.workup.ui.board.card.menu.create.CardCreatingMvpPresenter;
+import com.example.viet.workup.ui.board.card.menu.create.CardCreatingMvpView;
+import com.example.viet.workup.ui.board.card.menu.create.CardCreatingPresenter;
+import com.example.viet.workup.ui.board.card.menu.delete.CardDeletingMvpPresenter;
+import com.example.viet.workup.ui.board.card.menu.delete.CardDeletingMvpView;
+import com.example.viet.workup.ui.board.card.menu.delete.CardDeletingPresenter;
+import com.example.viet.workup.ui.board.card.menu.move.CardMovingMvpPresenter;
+import com.example.viet.workup.ui.board.card.menu.move.CardMovingMvpView;
+import com.example.viet.workup.ui.board.card.menu.move.CardMovingPresenter;
+import com.example.viet.workup.ui.board.list_card.ListAddingMvpPresenter;
+import com.example.viet.workup.ui.board.list_card.ListAddingMvpView;
+import com.example.viet.workup.ui.board.list_card.ListAddingPresenter;
+import com.example.viet.workup.ui.board.member.CardMemberMvpPresenter;
+import com.example.viet.workup.ui.board.member.CardMemberMvpView;
+import com.example.viet.workup.ui.board.member.CardMemberPresenter;
+import com.example.viet.workup.ui.image.item.ItemMvpPresenter;
+import com.example.viet.workup.ui.image.item.ItemMvpView;
+import com.example.viet.workup.ui.image.item.ItemPresenter;
+import com.example.viet.workup.ui.image.item.menu.ItemImageOptionMvpPresenter;
+import com.example.viet.workup.ui.image.item.menu.ItemImageOptionMvpView;
+import com.example.viet.workup.ui.image.item.menu.ItemImageOptionPrsenter;
+import com.example.viet.workup.ui.image.main.ImageMvpPresenter;
+import com.example.viet.workup.ui.image.main.ImageMvpView;
+import com.example.viet.workup.ui.image.main.ImagePresenter;
 import com.example.viet.workup.ui.introduced.IntroducedMvpPresenter;
 import com.example.viet.workup.ui.introduced.IntroducedMvpView;
 import com.example.viet.workup.ui.introduced.IntroducedPresenter;
@@ -45,6 +70,9 @@ import com.example.viet.workup.ui.register.RegisterPresenter;
 import com.example.viet.workup.ui.work.WorkMvpPresenter;
 import com.example.viet.workup.ui.work.WorkMvpView;
 import com.example.viet.workup.ui.work.WorkPresenter;
+import com.example.viet.workup.ui.work.due_date.DueDateMvpPresenter;
+import com.example.viet.workup.ui.work.due_date.DueDateMvpView;
+import com.example.viet.workup.ui.work.due_date.DueDatePresenter;
 import com.example.viet.workup.ui.work.label.LabelMvpPresenter;
 import com.example.viet.workup.ui.work.label.LabelMvpView;
 import com.example.viet.workup.ui.work.label.LabelPresenter;
@@ -101,7 +129,7 @@ public class ActivityModule {
     }
 
     @Provides
-    AddingMvpPresenter<AddingMvpView> provideAddingPresenter(AddingPresenter<AddingMvpView> addingPresenter) {
+    ListAddingMvpPresenter<ListAddingMvpView> provideAddingPresenter(ListAddingPresenter<ListAddingMvpView> addingPresenter) {
         return addingPresenter;
     }
 
@@ -143,5 +171,52 @@ public class ActivityModule {
     @Provides
     WorkListMvpPresenter<WorkListMvpView> provideWorkListPresenter(WorkListPresenter<WorkListMvpView> workListPresenter) {
         return workListPresenter;
+    }
+
+    @Provides
+    DueDateMvpPresenter<DueDateMvpView> provideDueDatePresenter(DueDatePresenter<DueDateMvpView> duaDatePresenter) {
+        return duaDatePresenter;
+    }
+
+    @Provides
+    MemberAddingMvpPresenter<MemberAddingMvpView> provideMemberAddingPresenter(MemberAddingPresenter<MemberAddingMvpView> memberAddingPresenter) {
+        return memberAddingPresenter;
+    }
+
+    @Provides
+    CardMovingMvpPresenter<CardMovingMvpView> provideCardMoingPresenter(CardMovingPresenter<CardMovingMvpView> cardMovingPresenter) {
+        return cardMovingPresenter;
+    }
+
+    @Provides
+    CardDeletingMvpPresenter<CardDeletingMvpView> provideCardDeletingPresenter(CardDeletingPresenter<CardDeletingMvpView> cardDeletingPresenter) {
+        return cardDeletingPresenter;
+    }
+
+    @Provides
+    CardMemberMvpPresenter<CardMemberMvpView> provideCardMemberPresenter(CardMemberPresenter<CardMemberMvpView> cardMemberPresenter) {
+        return cardMemberPresenter;
+    }
+
+    @Provides
+    @PerActivity
+    ImageMvpPresenter<ImageMvpView> provideImagePresenter(ImagePresenter<ImageMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    ItemMvpPresenter<ItemMvpView> provideItemPresenter(ItemPresenter<ItemMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ItemImageOptionMvpPresenter<ItemImageOptionMvpView> provideItemImagePresenter(ItemImageOptionPrsenter<ItemImageOptionMvpView> itemOptionPrsenter) {
+        return itemOptionPrsenter;
+    }
+
+    @Provides
+    BackgroundMvpPresenter<BackgroundMvpView> provideBackgroundPresenter(BackgroundPresenter<BackgroundMvpView> backgroundPresenter) {
+        return backgroundPresenter;
     }
 }

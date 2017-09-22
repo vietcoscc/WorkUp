@@ -11,13 +11,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Card;
 import com.example.viet.workup.model.DueDate;
 import com.example.viet.workup.model.Label;
 import com.example.viet.workup.model.UserInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -66,8 +66,8 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivCover)
         ImageView ivCover;
-        @BindView(R.id.ivAttachment)
-        ImageView ivAttachment;
+//        @BindView(R.id.ivAttachment)
+//        ImageView ivAttachment;
         @BindView(R.id.ivComment)
         ImageView ivComment;
         @BindView(R.id.ivCheck)
@@ -82,8 +82,8 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         TextView tvTitle;
         @BindView(R.id.tvComment)
         TextView tvComment;
-        @BindView(R.id.tvAttachemt)
-        TextView tvAttachment;
+//        @BindView(R.id.tvAttachemt)
+//        TextView tvAttachment;
         @BindView(R.id.tvCheck)
         TextView tvCheck;
         @BindView(R.id.tvDueDate)
@@ -124,17 +124,21 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (coverImageUrl == null || coverImageUrl.isEmpty()) {
                 ivCover.setVisibility(View.GONE);
             } else {
-                Glide.with(mContext)
+                ivCover.setVisibility(View.VISIBLE);
+                Picasso.with(mContext)
                         .load(coverImageUrl)
+                        .resize(500,300)
+                        .centerCrop()
                         .placeholder(android.R.drawable.screen_background_light)
-                        .error(android.R.drawable.screen_background_dark).centerCrop();
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivCover);
             }
-            if (attachment == 0) {
-                ivAttachment.setVisibility(View.GONE);
-                tvAttachment.setVisibility(View.GONE);
-            } else {
-                tvAttachment.setText(attachment + "");
-            }
+//            if (attachment == 0) {
+//                ivAttachment.setVisibility(View.GONE);
+//                tvAttachment.setVisibility(View.GONE);
+//            } else {
+//                tvAttachment.setText(attachment + "");
+//            }
             if (commentCount == 0) {
                 ivComment.setVisibility(View.GONE);
                 tvComment.setVisibility(View.GONE);
@@ -151,7 +155,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 tvDueDate.setVisibility(View.GONE);
                 ivDueDate.setVisibility(View.GONE);
             } else {
-                tvDueDate.setText(dueDate.getDay() + " thg " + dueDate.getMonth() + " nm " + dueDate.getYeah());
+                tvDueDate.setText(dueDate.getDay() + " thg " + dueDate.getMonth() + " nm " + dueDate.getYear());
             }
             if (labels == null || labels.isEmpty()) {
                 recyclerViewLabel.setVisibility(View.GONE);

@@ -72,12 +72,14 @@ public class BoardCreatingDialog extends BaseDialogFragment implements BoardCrea
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if(isOnProgress()){
+                            return;
+                        }
                         if (TextUtils.isEmpty(edtName.getText().toString())) {
                             Toast.makeText(mContext, "Board name must not empty !", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         mPresenter.onCreateBoardButtonClick(edtName.getText().toString(), spinner.getSelectedItem().toString(), checkBox.isChecked());
-                        button.setClickable(false);
                     }
                 });
             }
@@ -109,5 +111,10 @@ public class BoardCreatingDialog extends BaseDialogFragment implements BoardCrea
     @Override
     public void showMessge(String message) {
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }

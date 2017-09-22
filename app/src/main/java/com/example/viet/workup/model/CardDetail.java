@@ -13,7 +13,14 @@ public class CardDetail {
     private ArrayList<WorkList> arrWorkList;
     private ArrayList<Comment> arrComment;
 
-    public CardDetail(String description, String dueTime, ArrayList<String> arrAttachFile, ArrayList<WorkList> arrWorkList, ArrayList<Comment> arrComment) {
+    public CardDetail() {
+    }
+
+    public CardDetail(String description,
+                      String dueTime,
+                      ArrayList<String> arrAttachFile,
+                      ArrayList<WorkList> arrWorkList,
+                      ArrayList<Comment> arrComment) {
 
         this.description = description;
         this.dueTime = dueTime;

@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_padding"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:descendantFocusability="beforeDescendants"
+    android:padding="@dimen/default_padding">
 
     <EditText
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:id="@+id/edtAddTask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Add task .." />
-</LinearLayout>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:hint="Add task .."
+        android:imeOptions="actionDone" />
+
+    <ImageView
+        android:id="@+id/ivAddTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/default_padding"
+        android:src="@drawable/ic_check_work"
+        android:visibility="gone" />
+</RelativeLayout>

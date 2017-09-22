@@ -18,6 +18,8 @@ public interface MainMvpView extends MvpView {
 
     void showUnstarBoardReceived(Board board);
 
+    void showOtherBoardReceived(Board board);
+
     void showUnstarBoardOptionMenu(View view, int position);
 
     void showStarBoardOptionMene(View view, int position);

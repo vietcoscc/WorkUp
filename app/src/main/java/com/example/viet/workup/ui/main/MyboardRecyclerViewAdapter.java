@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -16,7 +15,9 @@ import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Board;
+import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,6 +33,7 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private boolean type;
     private Listener.OnItemClickListenter mOnItemClickListenter;
     private Listener.OnItemLongClickListener mOnItemLongClickListener;
+    Field field[] = R.raw.class.getFields();
 
     public MyboardRecyclerViewAdapter(ArrayList<Board> arrBoard, boolean type) {
         this.mArrBoard = arrBoard;
@@ -94,17 +96,27 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         void setData(Board board) {
             tvTitle.setText(board.getTitle());
-            if (board.getImageUrl() == null || board.getImageUrl().isEmpty()) {
-                ivBackground.setBackgroundColor(Color.BLUE);
-            } else {
-                Glide.with(context).load(board.getImageUrl()).into(ivBackground);
+            board.getImageUrl();
+
+            try {
+//                InputStream inputStream = context.getResources().openRawResource();
+                Glide.with(context).load(field[board.getImageUrl()].getInt(null))
+                        .centerCrop()
+                        .placeholder(android.R.drawable.screen_background_light)
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivBackground);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
+            ivBackground.setBackgroundColor(Color.BLUE);
+
+
             if (board.isStar()) {
                 ivStar.setVisibility(View.VISIBLE);
             } else {
                 ivStar.setVisibility(View.INVISIBLE);
             }
-            AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(context,android.R.anim.slide_in_left);
+            AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             itemView.startAnimation(animation);
         }
     }

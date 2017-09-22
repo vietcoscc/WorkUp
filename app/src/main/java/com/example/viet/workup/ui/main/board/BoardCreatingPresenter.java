@@ -1,10 +1,13 @@
 package com.example.viet.workup.ui.main.board;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Board;
+import com.example.viet.workup.utils.DataUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +22,7 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.unstarBoardRef
  */
 
 public class BoardCreatingPresenter<V extends BoardCreatingMvpView> extends BasePresenter<V> implements BoardCreatingMvpPresenter<V> {
+    public static final String TAG = "BoardCreatingPresenter";
     private AccountManager mAccountManager = AccountManager.getsInstance();
 
     @Inject
@@ -28,8 +32,18 @@ public class BoardCreatingPresenter<V extends BoardCreatingMvpView> extends Base
 
     @Override
     public void onCreateBoardButtonClick(String name, String group, boolean isChecked) {
+        if (!DataUtils.isBoardNameValid(name)) {
+            if (getmMvpView() != null) {
+                getmMvpView().showMessge("Board name invalid");
+            }
+            return;
+        }
+        if (TextUtils.isEmpty(group)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         getmMvpView().showProgress();
-        Board board = new Board(name, "", isChecked);
+        Board board = new Board(name, 0, isChecked);
         DatabaseReference ref;
         if (isChecked) {
             ref = starBoardRef(mAccountManager.getmAuth().getCurrentUser().getUid());

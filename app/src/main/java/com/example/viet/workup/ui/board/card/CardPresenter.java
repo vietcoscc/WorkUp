@@ -1,5 +1,6 @@
 package com.example.viet.workup.ui.board.card;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
@@ -29,56 +30,71 @@ public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> imple
 
     @Override
     public void onReceiveData(final String boardKey, final String cardListKey) {
-        cardListRef(boardKey, cardListKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        if (TextUtils.isEmpty(boardKey) || TextUtils.isEmpty(cardListKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        final ChildEventListener childEventListener = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                CardList cardList = dataSnapshot.getValue(CardList.class);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Card card = dataSnapshot.getValue(Card.class);
+                card.setKey(dataSnapshot.getKey());
+                Log.i(TAG, dataSnapshot.getKey());
                 if (getmMvpView() != null) {
-                    getmMvpView().showListTitle(cardList.getTitle());
+                    getmMvpView().showCard(card);
                 }
-                arrCardRef(boardKey, cardListKey).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Card card = dataSnapshot.getValue(Card.class);
-                        card.setKey(dataSnapshot.getKey());
-                        Log.i(TAG, dataSnapshot.getKey());
-                        if (getmMvpView() != null) {
-                            getmMvpView().showCard(card);
-                        }
-                    }
+            }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                    }
+            }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                    }
+            }
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                CardList cardList = dataSnapshot.getValue(CardList.class);
+                if (getmMvpView() != null) {
+                    getmMvpView().showListTitle(cardList.getTitle());
+                }
+                arrCardRef(boardKey, cardListKey).addChildEventListener(childEventListener);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        arrCardRef(boardKey, cardListKey).removeEventListener(childEventListener);
+        cardListRef(boardKey, cardListKey).removeEventListener(valueEventListener);
+        cardListRef(boardKey, cardListKey).addListenerForSingleValueEvent(valueEventListener);
     }
 
     @Override
     public void onCardClick(String boardKey, String cardListKey, String position) {
+        if (TextUtils.isEmpty(boardKey) || TextUtils.isEmpty(cardListKey) || TextUtils.isEmpty(position)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         String cardKey = boardKey.trim() + "+" + cardListKey.trim() + "+" + position;
+        if (getmMvpView() == null) {
+            return;
+        }
         getmMvpView().showCardDetail(cardKey);
     }
 

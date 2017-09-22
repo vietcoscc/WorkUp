@@ -9,16 +9,17 @@
     tools:showIn="@layout/activity_work">
 
     <android.support.v4.widget.NestedScrollView
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_100"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <TextView
@@ -48,11 +49,11 @@
                     android:tint="@color/grey_600" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:nestedScrollingEnabled="false"
                     android:id="@+id/recyclerViewLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:nestedScrollingEnabled="false"
                     android:overScrollMode="always" />
             </LinearLayout>
 
@@ -72,14 +73,15 @@
                     android:tint="@color/grey_600" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:nestedScrollingEnabled="false"
                     android:id="@+id/recyclerViewMember"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:nestedScrollingEnabled="false"
                     android:overScrollMode="always" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,31 +98,27 @@
                     android:tint="@color/grey_600" />
 
                 <TextView
-                    android:text="@string/app_name"
                     android:id="@+id/tvDueDate"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/app_name" />
             </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:nestedScrollingEnabled="false"
                 android:id="@+id/recyclerViewWorkList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:nestedScrollingEnabled="false"
                 android:overScrollMode="always" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_400" />
-
             <android.support.v7.widget.RecyclerView
-                android:nestedScrollingEnabled="false"
                 android:id="@+id/recyclerViewAttachment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:overScrollMode="always"
                 android:visibility="gone" />
 
@@ -129,6 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -145,18 +144,38 @@
                     android:text="Comment" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/edtComment"
+            <RelativeLayout
+
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:hint="Add comment ... " />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:hint="Add comment ... "
+                    android:imeOptions="actionDone" />
+
+                <ImageView
+                    android:id="@+id/ivComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:padding="@dimen/default_padding"
+                    android:src="@drawable/ic_check_work"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
 
             <android.support.v7.widget.RecyclerView
-                android:nestedScrollingEnabled="false"
                 android:id="@+id/recyclerViewComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:overScrollMode="always" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -3,13 +3,12 @@ package com.example.viet.workup.ui.board.card;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.UserInfo;
 import com.squareup.picasso.Picasso;
@@ -64,14 +63,24 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         public MemberViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            ViewCompat.setNestedScrollingEnabled(itemView, false);
         }
 
         public void setData(UserInfo userInfo) {
-            Picasso.with(mContext)
-                    .load(userInfo.getPhotoUrl())
-                    .placeholder(android.R.color.darker_gray)
-                    .error(android.R.drawable.screen_background_dark)
-                    .into(ivMember);
+            if (userInfo.getPhotoUrl() == null || userInfo.getPhotoUrl().isEmpty()) {
+                Picasso.with(mContext)
+                        .load(R.mipmap.ic_launcher_round)
+                        .placeholder(android.R.drawable.screen_background_light)
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivMember);
+            } else {
+                Picasso.with(mContext)
+                        .load(userInfo.getPhotoUrl())
+                        .placeholder(android.R.drawable.screen_background_light)
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivMember);
+            }
+
 //            getDrawableObservable(userInfo.getPhotoUrl())
 //                    .subscribeOn(Schedulers.io())
 //                    .observeOn(AndroidSchedulers.mainThread())

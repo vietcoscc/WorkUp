@@ -21,6 +21,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.UUID;
 
 import static com.example.viet.workup.utils.AccountUtils.buildProgressDialog;
 import static com.example.viet.workup.utils.AccountUtils.isValidEmail;
@@ -68,19 +71,39 @@ public class AccountManager {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = task.getResult().getUser();
-                    String displayName = null;
-                    String photoUrl = null;
+                    String displayName;
+                    String photoUrl;
                     if (user.getPhotoUrl() == null) {
                         photoUrl = "";
+                    } else {
+                        photoUrl = user.getPhotoUrl().toString();
                     }
                     if (user.getDisplayName() == null) {
                         displayName = "";
+                    } else {
+                        displayName = user.getDisplayName();
                     }
                     UserInfo userInfo = new UserInfo(displayName,
                             user.getEmail(),
                             CalendarUtils.getCurrentDate(),
                             photoUrl,
                             user.getUid());
+                    if (displayName.isEmpty()) {
+                        String id = UUID.randomUUID().toString();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(id)
+                                .build();
+                        userInfo.setDisplayName(id);
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User profile updated.");
+                                        }
+                                    }
+                                });
+                    }
                     userAccountRef(userInfo.getUid()).setValue(userInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -210,5 +233,13 @@ public class AccountManager {
 
     public FirebaseUser getCurrentUser() {
         return mAuth.getCurrentUser();
+    }
+
+    public UserInfo getUserInfo() {
+        return new UserInfo(getCurrentUser().getDisplayName(),
+                getCurrentUser().getEmail(),
+                "",
+                getCurrentUser().getPhotoUrl()+"",
+                getCurrentUser().getUid());
     }
 }

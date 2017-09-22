@@ -1,9 +1,12 @@
 package com.example.viet.workup.ui.work.work_list;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.model.WorkList;
+import com.example.viet.workup.utils.DataUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,18 +22,30 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrWorkListRef
  */
 
 public class WorkListPresenter<V extends WorkListMvpView> extends BasePresenter<V> implements WorkListMvpPresenter<V> {
+    public static final String TAG = "WorkListPresenter";
+
     @Inject
     public WorkListPresenter() {
     }
 
     @Override
     public void onAddWorkList(final String cardKey, final String title) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        if (!DataUtils.isWorkListNameValid(title)) {
+            if (getmMvpView() != null) {
+                getmMvpView().showMessge("Title invalid");
+            }
+            return;
+        }
         getmMvpView().showProgress();
         arrWorkListRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
-                WorkList workList = new WorkList(title, null);
+                WorkList workList = new WorkList(title, 0, null);
                 arrWorkListRef(cardKey).child(count + "").setValue(workList)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

@@ -25,4 +25,9 @@
     <string name="action_add">Add card</string>
     <string name="action_move_list">Move list</string>
     <string name="action_archive_list">Archive list</string>
+    <string name="action_delete">Delete list</string>
+
+    <string name="action_open">Open</string>
+    <string name="action_save">Save</string>
+    <string name="action_set_as_background">Set as background</string>
 </resources>

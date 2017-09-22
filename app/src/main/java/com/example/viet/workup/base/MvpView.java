@@ -11,4 +11,6 @@ public interface MvpView {
     void hideProgress();
 
     void showMessge(String message);
+
+    boolean isOnProgress();
 }

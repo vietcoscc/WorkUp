@@ -2,6 +2,8 @@ package com.example.viet.workup.ui.board.card;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,7 +33,8 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.CARD_LIST;
 
 
 public class CardFragment extends BaseFragment implements CardMvpView, View.OnClickListener {
-
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout refreshLayout;
     @BindView(R.id.tvTitle)
     TextView tvTitle;
     @BindView(R.id.recyclerViewCardList)
@@ -71,6 +74,20 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     }
 
     private void initViews() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getContext(), "onRefresh", Toast.LENGTH_SHORT).show();
+                arrCard.clear();
+                mPresenter.onReceiveData(mBoardKey, mCardListKey);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
         btnAddCard.setOnClickListener(this);
         cardRecyclerViewAdapter = new CardRecyclerViewAdapter(arrCard);
         cardRecyclerViewAdapter.setOnItemClickListenter(new Listener.OnItemClickListenter() {
@@ -96,11 +113,11 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     }
 
 
-    @Override
-    public void onDestroy() {
-        mPresenter.onDetach();
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        mPresenter.onDetach();
+//        super.onDestroy();
+//    }
 
     @Override
     public void showListTitle(String listTitle) {
@@ -139,8 +156,8 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         mPresenter.onDetach();
-        super.onDestroyView();
+        super.onDestroy();
     }
 }

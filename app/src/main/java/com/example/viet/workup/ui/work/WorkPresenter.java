@@ -1,11 +1,19 @@
 package com.example.viet.workup.ui.work;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.example.viet.workup.base.BasePresenter;
+import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Comment;
 import com.example.viet.workup.model.DueDate;
 import com.example.viet.workup.model.Label;
 import com.example.viet.workup.model.UserInfo;
 import com.example.viet.workup.model.WorkList;
+import com.example.viet.workup.utils.CalendarUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,28 +23,123 @@ import javax.inject.Inject;
 
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrCommentListRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrWorkListRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.commentCountRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.coverImageCardRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.descriptionCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.dueDateCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.labelCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.memberCardRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.titleCardRed;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.userAccountRef;
 
 /**
  * Created by viet on 13/09/2017.
  */
 
 public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> implements WorkMvpPresenter<V> {
+    public static final String TAG = "WorkPresenter";
+    private AccountManager mAccountManager = AccountManager.getsInstance();
+
     @Inject
     public WorkPresenter() {
     }
 
     @Override
+    public void onReceiveCoverImage(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        coverImageCardRef(cardKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = dataSnapshot.getValue(String.class);
+                if (TextUtils.isEmpty(url)) {
+                    return;
+                }
+                if (getmMvpView() != null) {
+                    getmMvpView().showCoverImage(url);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onReceiveTitle(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        titleCardRed(cardKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = dataSnapshot.getValue(String.class);
+                if (getmMvpView() == null) {
+                    return;
+                }
+                if (TextUtils.isEmpty(title)) {
+                    getmMvpView().finishActivity();
+                }
+                getmMvpView().showTitle(title);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onReceiveDescription(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        descriptionCardRef(cardKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String des = dataSnapshot.getValue(String.class);
+                if (TextUtils.isEmpty(des)) {
+                    return;
+                }
+                getmMvpView().showDes(des);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
     public void onReceiveLabel(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         labelCardRef(cardKey).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Label label = dataSnapshot.getValue(Label.class);
-                if (getmMvpView() != null) {
-                    getmMvpView().showLabel(label);
-                }
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        Label label = dataSnapshot.getValue(Label.class);
+                        if (label == null) {
+                            return;
+                        }
+                        if (getmMvpView() != null) {
+                            getmMvpView().showLabel(label);
+                        }
+                    }
+                }.start();
             }
 
             @Override
@@ -63,13 +166,27 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
     @Override
     public void onReceiveMember(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         memberCardRef(cardKey).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
-                if (getmMvpView() != null) {
-                    getmMvpView().showMemeber(userInfo);
-                }
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
+                        if (userInfo == null) {
+                            return;
+                        }
+                        if (getmMvpView() != null) {
+                            getmMvpView().showMemeber(userInfo);
+                        }
+                    }
+                }.start();
+
             }
 
             @Override
@@ -95,16 +212,18 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void onReceiveAttachment(String cardKey) {
-
-    }
-
-    @Override
     public void onReceiveWorkList(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         arrWorkListRef(cardKey).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 WorkList workList = dataSnapshot.getValue(WorkList.class);
+                if (workList == null) {
+                    return;
+                }
                 if (getmMvpView() != null) {
                     getmMvpView().showWordList(workList);
                 }
@@ -134,10 +253,17 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
     @Override
     public void onReceiveComment(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         arrCommentListRef(cardKey).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 Comment comment = dataSnapshot.getValue(Comment.class);
+                if (comment == null) {
+                    return;
+                }
                 if (getmMvpView() != null) {
                     getmMvpView().showComment(comment);
                 }
@@ -167,11 +293,28 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
     @Override
     public void onReveiveDueDate(String cardKey) {
+        if (TextUtils.isEmpty(cardKey)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         dueDateCardRef(cardKey).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DueDate dueDate = dataSnapshot.getValue(DueDate.class);
-                getmMvpView().showDueDate(dueDate);
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        DueDate dueDate = dataSnapshot.getValue(DueDate.class);
+                        if (dueDate == null) {
+                            return;
+                        }
+                        if (dueDate != null) {
+                            if (getmMvpView() != null) {
+                                getmMvpView().showDueDate(dueDate);
+                            }
+                        }
+                    }
+                }.start();
             }
 
             @Override
@@ -179,5 +322,58 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
             }
         });
+    }
+
+    @Override
+    public void onAddComment(final String cardKey, final String content) {
+        if (TextUtils.isEmpty(cardKey) || TextUtils.isEmpty(content)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
+        getmMvpView().resetTextComment();
+        userAccountRef(mAccountManager.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot2) {
+                final UserInfo userInfo = dataSnapshot2.getValue(UserInfo.class);
+                arrCommentListRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot1) {
+                        Comment comment = new Comment(userInfo, content.trim(), CalendarUtils.getCurrentTime());
+                        arrCommentListRef(cardKey).child(dataSnapshot1.getChildrenCount() + "").setValue(comment)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            commentCountRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    int count = dataSnapshot.getValue(Integer.class);
+                                                    commentCountRef(cardKey).setValue(count + 1);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

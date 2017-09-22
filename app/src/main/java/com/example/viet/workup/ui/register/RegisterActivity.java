@@ -51,5 +51,4 @@ public class RegisterActivity extends BaseActivity implements RegisterMvpView, V
         }
     }
 
-
 }

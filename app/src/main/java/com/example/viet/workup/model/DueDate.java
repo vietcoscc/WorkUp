@@ -7,15 +7,15 @@ package com.example.viet.workup.model;
 public class DueDate {
     private int day;
     private int month;
-    private int yeah;
+    private int year;
 
     public DueDate() {
     }
 
-    public DueDate(int day, int month, int yeah) {
+    public DueDate(int day, int month, int year) {
         this.day = day;
         this.month = month;
-        this.yeah = yeah;
+        this.year = year;
     }
 
     public int getDay() {
@@ -34,11 +34,16 @@ public class DueDate {
         this.month = month;
     }
 
-    public int getYeah() {
-        return yeah;
+    public int getYear() {
+        return year;
     }
 
-    public void setYeah(int yeah) {
-        this.yeah = yeah;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return day + "/" + month + "/" + year;
     }
 }

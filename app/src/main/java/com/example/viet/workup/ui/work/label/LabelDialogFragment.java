@@ -73,6 +73,9 @@ public class LabelDialogFragment extends BaseDialogFragment implements LabelMvpV
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (isOnProgress()) {
+                            return;
+                        }
                         String color = "#" + Integer.toHexString(colorPickerView.getSelectedColor());
                         Toast.makeText(mContext, color, Toast.LENGTH_SHORT).show();
                         mPresenter.onAddLabel(mCardKey, color, edtLabel.getText().toString());
@@ -102,5 +105,10 @@ public class LabelDialogFragment extends BaseDialogFragment implements LabelMvpV
     @Override
     public void showFailure() {
         Toast.makeText(mContext, "Failed", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 }

@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
-                    android:text="Star"
+                    android:text="Star board"
                     android:textColor="@color/black" />
             </android.support.v7.widget.CardView>
 
@@ -47,15 +47,15 @@
                 android:nestedScrollingEnabled="false" />
 
             <android.support.v7.widget.CardView
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
-                    android:text="My board"
+                    android:text="Board"
                     android:textColor="@color/black" />
             </android.support.v7.widget.CardView>
 
@@ -66,6 +66,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:nestedScrollingEnabled="false" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="Others"
+                    android:textColor="@color/black" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+
+                android:id="@+id/recyclerViewOtherrBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:nestedScrollingEnabled="false" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

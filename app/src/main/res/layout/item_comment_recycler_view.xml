@@ -7,6 +7,7 @@
     android:weightSum="10">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:id="@+id/ivAvatar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -14,9 +15,10 @@
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_weight="9"
         android:orientation="vertical">
 
@@ -25,6 +27,7 @@
             style="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:text="@string/app_name"
             android:textColor="@color/grey_800" />
 

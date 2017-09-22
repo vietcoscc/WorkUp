@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.Comment;
 import com.squareup.picasso.Picasso;
@@ -62,10 +61,18 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         public void setData(Comment comment) {
-            Picasso.with(mContext).load(comment.getUserInfo().getPhotoUrl())
-                    .placeholder(android.R.drawable.screen_background_light)
-                    .error(android.R.drawable.screen_background_dark)
-                    .into(ivAvatar);
+            if (comment.getUserInfo().getPhotoUrl().isEmpty()) {
+                Picasso.with(mContext).load(R.mipmap.ic_launcher_round)
+                        .placeholder(android.R.drawable.screen_background_light)
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivAvatar);
+            } else {
+                Picasso.with(mContext).load(comment.getUserInfo().getPhotoUrl())
+                        .placeholder(android.R.drawable.screen_background_light)
+                        .error(android.R.drawable.screen_background_dark)
+                        .into(ivAvatar);
+            }
+
             tvDisplayName.setText(comment.getUserInfo().getDisplayName());
             tvComment.setText(comment.getContent());
         }

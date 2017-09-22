@@ -31,9 +31,40 @@ public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        int index = mArrCardList.indexOf(object);
+        if (index > -1) {
+            return index;
+        }
+        return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return mArrCardList.size();
     }
 
+    public void addItem(CardList cardList) {
+        try {
+            if (cardList != null) {
+                mArrCardList.add(cardList);
+                notifyDataSetChanged();
+            }
+        }catch (Exception e){
 
+        }
+
+    }
+
+    public void removeItem(int position) {
+        try {
+            if (position > -1) {
+                mArrCardList.remove(position);
+                notifyDataSetChanged();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_member"
+        android:icon="@drawable/ic_person_black"
+        android:title="Member" />
+    <item
+        android:id="@+id/item_activity"
+        android:icon="@drawable/ic_comment"
+        android:title="Activity" />
+    <item
+        android:id="@+id/item_card_archived"
+        android:icon="@drawable/ic_person_black"
+        android:title="Card archived" />
+    <item
+        android:id="@+id/item_list_archived"
+        android:icon="@drawable/ic_person_black"
+        android:title="List archived" />
+    <item
+
+        android:id="@+id/item_back_ground"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Background" />
+    <item
+        android:id="@+id/item_view_righs"
+        android:icon="@drawable/ic_view"
+        android:title="View rights" />
+    <item
+        android:id="@+id/item_right_to_comment"
+        android:icon="@drawable/ic_comment"
+        android:title="Right to comment"
+        app:showAsAction="never" />
+</menu>

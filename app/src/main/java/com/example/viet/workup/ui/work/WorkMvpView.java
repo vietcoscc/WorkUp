@@ -12,6 +12,8 @@ import com.example.viet.workup.model.WorkList;
  */
 
 public interface WorkMvpView extends MvpView {
+    void showCoverImage(String url);
+
     void showLabel(Label label);
 
     void showMemeber(UserInfo userInfo);
@@ -23,4 +25,12 @@ public interface WorkMvpView extends MvpView {
     void showComment(Comment comment);
 
     void showDueDate(DueDate dueDate);
+
+    void showTitle(String title);
+
+    void showDes(String des);
+
+    void resetTextComment();
+
+    void finishActivity();
 }

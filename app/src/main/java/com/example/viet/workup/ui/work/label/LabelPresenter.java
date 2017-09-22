@@ -1,6 +1,8 @@
 package com.example.viet.workup.ui.work.label;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.model.Label;
@@ -19,12 +21,18 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.labelCardRef;
  */
 
 public class LabelPresenter<V extends LabelMvpView> extends BasePresenter<V> implements LabelMvpPresenter<V> {
+    public static final String TAG = "LabelPresenter";
+
     @Inject
     public LabelPresenter() {
     }
 
     @Override
     public void onAddLabel(final String cardKey, final String color, final String label) {
+        if (TextUtils.isEmpty(cardKey) || TextUtils.isEmpty(label)) {
+            Log.e(TAG, "Empty!");
+            return;
+        }
         getmMvpView().showProgress();
         labelCardRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -6,14 +6,15 @@ package com.example.viet.workup.model;
 
 public class Board {
     private String key;
+    private String parentKey;
     private String title;
-    private String imageUrl;
+    private int imageUrl;
     private boolean isStar;
 
     public Board() {
     }
 
-    public Board(String title, String imageUrl, boolean isStar) {
+    public Board(String title, int imageUrl, boolean isStar) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.isStar = isStar;
@@ -35,11 +36,11 @@ public class Board {
         this.title = title;
     }
 
-    public String getImageUrl() {
+    public int getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(int imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -49,5 +50,13 @@ public class Board {
 
     public void setStar(boolean star) {
         isStar = star;
+    }
+
+    public String getParentKey() {
+        return parentKey;
+    }
+
+    public void setParentKey(String parentKey) {
+        this.parentKey = parentKey;
     }
 }
