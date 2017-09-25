@@ -9,61 +9,81 @@
         android:layout_height="wrap_content"
         app:cardUseCompatPadding="true">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/refreshLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/layoutHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
 
-                <LinearLayout
-                    android:id="@+id/layoutHeader"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:layout_weight="8.5">
 
                     <TextView
                         android:id="@+id/tvTitle"
                         style="?android:attr/textAppearanceLarge"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="8.5"
                         android:background="@drawable/selector_button_press"
-                        android:padding="@dimen/default_padding" />
+                        android:padding="@dimen/default_padding"/>
 
-                    <ImageButton
-                        android:id="@+id/btnAddCard"
-                        style="?android:attr/textAppearanceLarge"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                    <EditText
+                        android:maxLines="1"
+                        android:layout_marginLeft="@dimen/default_padding"
+                        android:visibility="gone"
+                        android:id="@+id/edtEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/ivCheck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_weight="1.5"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/selector_button_press"
-                        android:src="@drawable/ic_more_vert" />
-                </LinearLayout>
+                        android:padding="4dp"
+                        android:src="@drawable/ic_check_work" />
+                </RelativeLayout>
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewCardList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layoutHeader"
-                    android:background="@color/grey_100"
-                    android:layoutMode="opticalBounds"
-                    android:minHeight="@dimen/recycler_view_min_height"
-                    android:nestedScrollingEnabled="false" />
+                <ImageButton
+                    android:id="@+id/btnAddCard"
+                    style="?android:attr/textAppearanceLarge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/selector_button_press"
+                    android:src="@drawable/ic_more_vert" />
+            </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/layoutHeader"
-                    android:background="@color/grey_300" />
 
-            </RelativeLayout>
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewCardList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutHeader"
+                android:background="@color/grey_100"
+                android:layoutMode="opticalBounds"
+                android:minHeight="@dimen/recycler_view_min_height"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/layoutHeader"
+                android:background="@color/grey_300" />
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

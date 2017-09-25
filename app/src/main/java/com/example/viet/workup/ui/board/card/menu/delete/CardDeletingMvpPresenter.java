@@ -7,5 +7,5 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface CardDeletingMvpPresenter<V extends CardDeletingMvpView> extends MvpPresenter<V> {
-    void onDeleteCardList(String boardKey,String cardListKey);
+    void onDeleteCardList(String boardKey,String cardListKey,String cardListName);
 }

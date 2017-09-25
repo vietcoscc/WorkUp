@@ -74,7 +74,7 @@ public class ItemImageOptionPrsenter<V extends ItemImageOptionMvpView> extends B
                     @Override
                     public void accept(Bitmap bitmap) {
 
-                        setImage(getScaledBitmap(bitmap, 0.5f));
+                        setImage(getScaledBitmap(bitmap, 0.4f));
                     }
                 });
         try {
@@ -95,7 +95,7 @@ public class ItemImageOptionPrsenter<V extends ItemImageOptionMvpView> extends B
 
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             byte b[] = bos.toByteArray();
             UploadTask uploadTask = getImageCoverRef(getCurrentCardKey()).putBytes(b);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

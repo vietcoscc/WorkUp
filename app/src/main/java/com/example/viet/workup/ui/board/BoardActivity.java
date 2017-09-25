@@ -2,8 +2,12 @@ package com.example.viet.workup.ui.board;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,40 +16,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseActivity;
+import com.example.viet.workup.manager.AccountManager;
+import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.CardList;
 import com.example.viet.workup.ui.board.add_member.MemberAddingDialogFragment;
 import com.example.viet.workup.ui.board.background.BackgroundDialogFragment;
 import com.example.viet.workup.ui.board.list_card.ListAddingDialogFragment;
 import com.example.viet.workup.ui.board.member.CardMemberDialogFragment;
 import com.example.viet.workup.ui.custom_view.CustomViewPager;
+import com.example.viet.workup.utils.ApplicationUtils;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.BOARD;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.STAR_BOARD;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.UID;
 
-public class BoardActivity extends BaseActivity implements BoardMvpView, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "BoardActivity";
+public class BoardActivity extends BaseActivity implements BoardMvpView, View.OnClickListener {
+    private static final String TAG = "BoardUserActivity";
 
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
@@ -59,15 +60,14 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     FloatingActionButton fabAddMember;
     @BindView(R.id.fabViewMember)
     FloatingActionButton fabViewMember;
-    @BindView(R.id.fabAuthority)
-    FloatingActionButton fabAuthority;
     @BindView(R.id.fabBackground)
     FloatingActionButton fabBackground;
     @BindView(R.id.fabMenu)
     FloatingActionsMenu fabMenu;
-    @BindView(R.id.nav)
-    NavigationView nav;
-
+    @BindView(R.id.recyclerViewActivity)
+    RecyclerView recyclerViewActivity;
+    @BindView(R.id.boardLayout)
+    CoordinatorLayout coordinatorLayout;
     @Inject
     BoardPresenter<BoardMvpView> mPresenter;
     //
@@ -75,26 +75,29 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     private String mBoardKey;
     private boolean isStar;
     //
-    private ArrayList<CardList> arrCardList = new ArrayList<>();
+    private ArrayList<CardList> mArrCardList = new ArrayList<>();
+    private ArrayList<String> mArrCardListKey = new ArrayList<>();
+    private ArrayList<BoardUserActivity> mArrBoardActivity = new ArrayList<>();
     private BoardViewPagerAdapter mBoardViewPagerAdapter;
-
+    private BoardActivityAdapter mBoardActivityAdapter;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_board);
+        mUidBoard = getIntent().getStringExtra(UID);
+        mBoardKey = getIntent().getStringExtra(BOARD);
+        isStar = getIntent().getBooleanExtra(STAR_BOARD, false);
+        //
         ButterKnife.bind(this);
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
-        receiveData();
+        initViews();
         initToolbar();
-        try {
-            initViews();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        receiveData();
     }
 
     @Override
@@ -114,14 +117,12 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     }
 
     private void receiveData() {
-        mUidBoard = getIntent().getStringExtra(UID);
-        mBoardKey = getIntent().getStringExtra(BOARD);
-        isStar = getIntent().getBooleanExtra(STAR_BOARD, false);
-        Log.i(TAG, mUidBoard + "");
-        Log.i(TAG, mBoardKey + "");
-        Log.i(TAG, isStar + "");
+
         try {
             mPresenter.onReceiveData(mBoardKey);
+            mBoardActivityAdapter.clearItem();
+            mPresenter.onReceiveBackground(mUidBoard, mBoardKey, isStar);
+            mPresenter.onReceiveMember(mBoardKey);
         } catch (Exception e) {
             Toast.makeText(this, "Data is not created", Toast.LENGTH_SHORT).show();
             finish();
@@ -129,32 +130,51 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
 
     }
 
-    private void initViews() throws MalformedURLException {
-
-        nav.setNavigationItemSelectedListener(this);
+    private void initViews() {
+        recyclerViewActivity.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewActivity.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        mBoardActivityAdapter = new BoardActivityAdapter(mArrBoardActivity);
+        recyclerViewActivity.setAdapter(mBoardActivityAdapter);
         fabAddList.setOnClickListener(this);
         fabAddMember.setOnClickListener(this);
         fabViewMember.setOnClickListener(this);
-        fabAuthority.setOnClickListener(this);
         fabBackground.setOnClickListener(this);
-        Field[] ID_Fields = R.raw.class.getFields();
-        mBoardViewPagerAdapter = new BoardViewPagerAdapter(getSupportFragmentManager(), mBoardKey, arrCardList);
-
+        mBoardViewPagerAdapter = new BoardViewPagerAdapter(getSupportFragmentManager(), mBoardKey, mArrCardList, mArrCardListKey);
         viewPager.setParallaxEnabled(true);
         viewPager.setPadding(50, 0, 50, 0);
         viewPager.setClipToPadding(false);
-        try {
-            viewPager.setBackgroundAsset(ID_Fields[1].getInt(null));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
         viewPager.setAdapter(mBoardViewPagerAdapter);
-        viewPager.setOffscreenPageLimit(20);
+        viewPager.set_max_pages(30);
+        viewPager.setOffscreenPageLimit(0);
+        viewPager.setBackgroundAsset(ApplicationUtils.rawId(0));
         if (TextUtils.isEmpty(mUidBoard) || TextUtils.isEmpty(mBoardKey)) {
             return;
         }
-        mPresenter.onReceiveBackground(mUidBoard, mBoardKey, isStar);
 
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, android.R.drawable.ic_delete, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mPresenter.onReceiveActivity(mBoardKey);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                mBoardActivityAdapter.clearItem();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                Log.i(TAG, slideOffset + "");
+                coordinatorLayout.setTranslationX(drawerView.getWidth() * (-slideOffset));
+                drawerLayout.bringChildToFront(drawerView);
+                drawerView.requestLayout();
+            }
+        };
+        drawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
     }
 
 
@@ -184,17 +204,14 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     }
 
     @Override
+    public void showArrActivity(BoardUserActivity boardUserActivity) {
+        recyclerViewActivity.smoothScrollToPosition(0);
+        mBoardActivityAdapter.addItem(boardUserActivity);
+    }
+
+    @Override
     public void hideCardList(String cardListKey) {
-        Toast.makeText(this, cardListKey, Toast.LENGTH_SHORT).show();
-        getCardListObservable(cardListKey)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(@NonNull Integer integer) throws Exception {
-                        mBoardViewPagerAdapter.removeItem(integer);
-                    }
-                });
+        mBoardViewPagerAdapter.removeItem(mArrCardListKey.indexOf(cardListKey));
     }
 
     @Override
@@ -203,23 +220,13 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     }
 
     @Override
-    public void showAddingListDialog() {
-
+    public void finishAcitivity() {
+        Toast.makeText(this, "You have been kicked", Toast.LENGTH_SHORT).show();
+        finishAcitivity();
     }
 
-    public Observable<Integer> getCardListObservable(final String cardListKey) {
-        return Observable.fromCallable(new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                int size = arrCardList.size();
-                for (int i = 0; i < size; i++) {
-                    if (cardListKey.trim().equals(arrCardList.get(i).getKey().trim())) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-        });
+    @Override
+    public void showAddingListDialog() {
     }
 
     @Override
@@ -239,13 +246,15 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
             ListAddingDialogFragment addingDialogFragment = ListAddingDialogFragment.newInstance(mBoardKey);
             addingDialogFragment.show(getSupportFragmentManager(), "");
         } else if (view.getId() == R.id.fabAddMember) {
-            MemberAddingDialogFragment dialogFragment = MemberAddingDialogFragment.newInstance(mUidBoard, mBoardKey, isStar);
-            dialogFragment.show(getSupportFragmentManager(), "");
+            if (mUidBoard.equals(AccountManager.getsInstance().getCurrentUser().getUid())) {
+                MemberAddingDialogFragment dialogFragment = MemberAddingDialogFragment.newInstance(mUidBoard, mBoardKey, isStar);
+                dialogFragment.show(getSupportFragmentManager(), "");
+            } else {
+                Toast.makeText(this, "Cant add member", Toast.LENGTH_SHORT).show();
+            }
         } else if (view.getId() == R.id.fabViewMember) {
-            CardMemberDialogFragment dialogFragment = CardMemberDialogFragment.newInstance(mBoardKey, mUidBoard);
+            CardMemberDialogFragment dialogFragment = CardMemberDialogFragment.newInstance(mBoardKey, mUidBoard, isStar);
             dialogFragment.show(getSupportFragmentManager(), "");
-        } else if (view.getId() == R.id.fabAuthority) {
-
         } else if (view.getId() == R.id.fabBackground) {
             BackgroundDialogFragment backgroundDialogFragment = BackgroundDialogFragment.newInstance(mUidBoard, mBoardKey, isStar);
             backgroundDialogFragment.show(getSupportFragmentManager(), "");
@@ -253,17 +262,6 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
         fabMenu.collapse();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@android.support.annotation.NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.item_member) {
-
-        } else if (id == R.id.item_back_ground) {
-
-        }
-        drawerLayout.closeDrawer(Gravity.RIGHT, false);
-        return false;
-    }
 
     @Override
     protected void onDestroy() {

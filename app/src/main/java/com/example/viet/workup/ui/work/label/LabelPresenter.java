@@ -29,16 +29,16 @@ public class LabelPresenter<V extends LabelMvpView> extends BasePresenter<V> imp
 
     @Override
     public void onAddLabel(final String cardKey, final String color, final String label) {
-        if (TextUtils.isEmpty(cardKey) || TextUtils.isEmpty(label)) {
+        if (TextUtils.isEmpty(cardKey)) {
             Log.e(TAG, "Empty!");
             return;
         }
         getmMvpView().showProgress();
+        final Label lb = new Label(color, label);
         labelCardRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
-                Label lb = new Label(color, label);
                 labelCardRef(cardKey).child(count + "").setValue(lb).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -60,10 +60,9 @@ public class LabelPresenter<V extends LabelMvpView> extends BasePresenter<V> imp
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                if (getmMvpView() != null) {
-                    getmMvpView().hideProgress();
-                }
+
             }
         });
+
     }
 }

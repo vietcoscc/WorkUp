@@ -1,10 +1,10 @@
 package com.example.viet.workup.ui.work;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,9 +20,8 @@ import android.widget.Toast;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
+import com.example.viet.workup.utils.ApplicationUtils;
+import com.example.viet.workup.utils.DataUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,14 +43,18 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public static final int TYPE_ADD_TASK = 2;
 
     private ArrayList<Task> arrTask;
+    private ArrayList<String> arrTaskKey;
     private Context mContext;
     private String mCardKey;
-    private String mWorkPosition;
+    private String mWorkKey;
 
-    public TaskListRecyclerViewAdapter(ArrayList<Task> arrTask, String cardKey, String workPosition) {
+    public TaskListRecyclerViewAdapter(ArrayList<Task> arrTask, ArrayList<String> arrTaskKey, String cardKey, String workKey) {
+        arrTask.clear();
+        arrTaskKey.clear();
         this.arrTask = arrTask;
         this.mCardKey = cardKey;
-        this.mWorkPosition = workPosition;
+        this.mWorkKey = workKey;
+        this.arrTaskKey = arrTaskKey;
     }
 
     @Override
@@ -97,6 +100,12 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         CheckBox checkBox;
         @BindView(R.id.tvTask)
         TextView tvTask;
+        @BindView(R.id.edtTitle)
+        EditText edttitle;
+        @BindView(R.id.ivCheck)
+        ImageView ivcheck;
+        @BindView(R.id.ivEdit)
+        ImageView ivEdit;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -104,12 +113,46 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             ViewCompat.setNestedScrollingEnabled(itemView, false);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+            ivEdit.setOnClickListener(this);
+            edttitle.addTextChangedListener(ApplicationUtils.getTextWatcher(ivcheck));
+            edttitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    InputMethodManager im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    im.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+                }
+            });
+            ivcheck.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            int id = view.getId();
+            if (id == R.id.ivEdit) {
+                edttitle.setVisibility(View.VISIBLE);
+                edttitle.setText(tvTask.getText());
+                tvTask.setVisibility(View.GONE);
+                ivcheck.setVisibility(View.VISIBLE);
+                ivEdit.setVisibility(View.GONE);
+                edttitle.requestFocus();
 
-            taskHasDoneRef(mCardKey, mWorkPosition, getPosition() + "").setValue(!checkBox.isChecked());
+            } else if (id == R.id.ivCheck) {
+                String title = edttitle.getText().toString().trim();
+                if (DataUtils.isWorkListNameValid(title)) {
+                    taskRef(mCardKey, mWorkKey, arrTask.get(getPosition()).getKey()).child("task").setValue(title);
+                    edttitle.setVisibility(View.GONE);
+                    edttitle.setText(tvTask.getText());
+                    tvTask.setVisibility(View.VISIBLE);
+                    ivcheck.setVisibility(View.GONE);
+                    ivEdit.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(mContext, "Task invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                taskHasDoneRef(mCardKey, mWorkKey, arrTask.get(getPosition()).getKey()).setValue(!checkBox.isChecked());
+            }
+
         }
 
         public void setData(Task task) {
@@ -124,16 +167,15 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public boolean onLongClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setMessage("Are you sure want to delete");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    taskRef(mCardKey, mWorkPosition, getPosition() + "").setValue(null);
-                }
-            });
-            builder.setNegativeButton("CAncel", null);
-            builder.create().show();
+            Dialog dialog = ApplicationUtils.buildConfirmDialog(mContext,
+                    "Are you sure want to delete",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            taskRef(mCardKey, mWorkKey, arrTaskKey.get(getPosition())).setValue(null);
+                        }
+                    });
+            dialog.show();
             return false;
         }
     }
@@ -163,20 +205,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
             }
         };
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                long count = dataSnapshot.getChildrenCount();
-                Task task = new Task(edtAddTask.getText() + "", false);
-                taskRef(mCardKey, mWorkPosition, count + "").setValue(task);
-                edtAddTask.setText("");
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
 
         public AddTaskViewHolder(View itemView) {
             super(itemView);
@@ -190,17 +219,21 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public void onClick(View view) {
             InputMethodManager im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             im.hideSoftInputFromWindow(edtAddTask.getWindowToken(), 0);
-            arrTaskListRef(mCardKey, mWorkPosition).addListenerForSingleValueEvent(valueEventListener);
+            Task task = new Task(edtAddTask.getText().toString().trim(), false);
+            edtAddTask.setText("");
+            arrTaskListRef(mCardKey, mWorkKey).push().setValue(task);
         }
     }
 
     public void addItem(Task task) {
         arrTask.add(task);
+        arrTaskKey.add(task.getKey());
         notifyItemInserted(arrTask.size() - 1);
     }
 
     public void removeItem(int position) {
         if (position >= 0 && position < arrTask.size()) {
+            arrTaskKey.remove(position);
             arrTask.remove(position);
             notifyItemRemoved(position);
         }
@@ -213,13 +246,14 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public void changeItem(Task task, int position) {
-        arrTask.get(position).setTask(task.getTask());
-        arrTask.get(position).setHasDone(task.isHasDone());
+        arrTask.set(position, task);
+        arrTaskKey.set(position, task.getKey());
         notifyItemChanged(position);
     }
 
     public void clearItem() {
         arrTask.clear();
+        arrTaskKey.clear();
         notifyDataSetChanged();
     }
 

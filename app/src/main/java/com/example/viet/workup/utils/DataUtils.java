@@ -9,7 +9,7 @@ import android.text.TextUtils;
 public class DataUtils {
     public static boolean isBoardNameValid(String name) {
         int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 50) {
+        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 30) {
             return true;
         }
         return false;
@@ -17,7 +17,7 @@ public class DataUtils {
 
     public static boolean isCardListNameValid(String name) {
         int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 40) {
+        if (!TextUtils.isEmpty(name) && length >= 3 && length <= 40) {
             return true;
         }
         return false;
@@ -33,7 +33,7 @@ public class DataUtils {
 
     public static boolean isWorkListNameValid(String name) {
         int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 20) {
+        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 30) {
             return true;
         }
         return false;
@@ -41,7 +41,7 @@ public class DataUtils {
 
     public static boolean isCardTitleValid(String name) {
         int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 40) {
+        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 60) {
             return true;
         }
         return false;
@@ -49,7 +49,7 @@ public class DataUtils {
 
     public static boolean isCardDescriptionValid(String name) {
         int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 500) {
+        if (!TextUtils.isEmpty(name) && length >= 1 && length <= 500) {
             return true;
         }
         return false;

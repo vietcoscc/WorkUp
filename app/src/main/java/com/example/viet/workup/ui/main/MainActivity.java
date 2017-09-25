@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +22,7 @@ import com.example.viet.workup.base.BaseActivity;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Board;
+import com.example.viet.workup.service.NotificationService;
 import com.example.viet.workup.ui.board.BoardActivity;
 import com.example.viet.workup.ui.introduced.IntroducedActivity;
 import com.example.viet.workup.ui.main.board.BoardCreatingDialog;
@@ -66,10 +66,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     MainPresenter<MainMvpView> mPresenter;
     //
     private ArrayList<Board> mArrUnstarBoard = new ArrayList<>();
+    private ArrayList<String> mArrUnstarBoardKey = new ArrayList<>();
     private MyboardRecyclerViewAdapter mUnstarBoardAdapter;
     private ArrayList<Board> mArrStarBoard = new ArrayList<>();
+    private ArrayList<String> mArrStarBoardKey = new ArrayList<>();
     private MyboardRecyclerViewAdapter mStarBoardAdapter;
     private ArrayList<Board> mArrOtherBoard = new ArrayList<>();
+    private ArrayList<String> mArrOtherBoardKey = new ArrayList<>();
     private MyboardRecyclerViewAdapter mOtherBoardAdapter;
     //
 
@@ -83,21 +86,20 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         initViews();
         mPresenter.onAttach(this);
         mPresenter.onReceiveData();
-
+        Intent intent = new Intent(this, NotificationService.class);
+        startService(intent);
     }
 
     private void initViews() {
         fab.setOnClickListener(this);
-        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
-        defaultItemAnimator.setAddDuration(1000);
         //recyclerViewUnstarBoard
         recyclerViewUnstarBoard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(recyclerViewUnstarBoard, false);
-        mUnstarBoardAdapter = new MyboardRecyclerViewAdapter(mArrUnstarBoard, true);
+        mUnstarBoardAdapter = new MyboardRecyclerViewAdapter(mArrUnstarBoard, mArrUnstarBoardKey, true);
         mUnstarBoardAdapter.setmOnItemLongClickListener(new Listener.OnItemLongClickListener() {
             @Override
             public void onLongClick(View view, int position) {
-                showUnstarBoardOptionMenu(view, position);
+//                showUnstarBoardOptionMenu(view, position);
             }
         });
         mUnstarBoardAdapter.setmOnItemClickListenter(new Listener.OnItemClickListenter() {
@@ -114,11 +116,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         // recyclerViewStarBoard
         recyclerViewStarBoard.setLayoutManager(new GridLayoutManager(this, 2));
         ViewCompat.setNestedScrollingEnabled(recyclerViewStarBoard, false);
-        mStarBoardAdapter = new MyboardRecyclerViewAdapter(mArrStarBoard, false);
+        mStarBoardAdapter = new MyboardRecyclerViewAdapter(mArrStarBoard, mArrStarBoardKey, false);
         mStarBoardAdapter.setmOnItemLongClickListener(new Listener.OnItemLongClickListener() {
             @Override
             public void onLongClick(View view, int position) {
-                showStarBoardOptionMene(view, position);
+//                showStarBoardOptionMene(view, position);
             }
         });
         mStarBoardAdapter.setmOnItemClickListenter(new Listener.OnItemClickListenter() {
@@ -135,13 +137,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         //
         recyclerViewOtherrBoard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(recyclerViewOtherrBoard, false);
-        mOtherBoardAdapter = new MyboardRecyclerViewAdapter(mArrOtherBoard, true);
-//        mOtherBoardAdapter.setmOnItemLongClickListener(new Listener.OnItemLongClickListener() {
-//            @Override
-//            public void onLongClick(View view, int position) {
-//                showStarBoardOptionMene(view, position);
-//            }
-//        });
+        mOtherBoardAdapter = new MyboardRecyclerViewAdapter(mArrOtherBoard, mArrOtherBoardKey, true);
         mOtherBoardAdapter.setmOnItemClickListenter(new Listener.OnItemClickListenter() {
             @Override
             public void onClick(View view, int position) {
@@ -234,6 +230,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     }
 
     @Override
+    public void removeOtherBoard(String boardUid, String otherBoardKey) {
+        mOtherBoardAdapter.removeItem(mArrOtherBoardKey.indexOf(otherBoardKey));
+    }
+
+    @Override
     public void showUnstarBoardOptionMenu(View view, int position) {
         BoardOptionMenu optionMenu = new BoardOptionMenu(MainActivity.this, view, recyclerViewUnstarBoard, mArrUnstarBoard, position);
         optionMenu.show();
@@ -263,9 +264,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
                     Drawable drawable = new BitmapDrawable(inputStream);
                     return drawable;
                 } catch (Exception e) {
-                    finish();
+                    Drawable drawable = getResources().getDrawable(android.R.drawable.screen_background_light);
+                    return drawable;
                 }
-                return null;
+
             }
         });
     }

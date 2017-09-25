@@ -35,12 +35,13 @@ public class IntroducedActivity extends BaseActivity implements IntroducedMvpVie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduced);
-        ButterKnife.bind(this);
-        initViews();
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
+        ButterKnife.bind(this);
+        initViews();
         mPresenter.onCheckLogin();
     }
 
@@ -97,10 +98,11 @@ public class IntroducedActivity extends BaseActivity implements IntroducedMvpVie
     @Override
     public void showMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
+
     @Override
     public void onDestroy() {
         mPresenter.onDetach();

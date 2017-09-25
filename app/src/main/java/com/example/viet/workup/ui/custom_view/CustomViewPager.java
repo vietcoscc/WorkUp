@@ -263,8 +263,9 @@ public class CustomViewPager extends ViewPager {
             dst.set((int) (getScrollX()), 0,
 
                     (int) (getScrollX() + canvas.getWidth()), canvas.getHeight());
-
-            canvas.drawBitmap(saved_bitmap, src, dst, null);
+            if (saved_bitmap != null) {
+                canvas.drawBitmap(saved_bitmap, src, dst, null);
+            }
 
         }
 

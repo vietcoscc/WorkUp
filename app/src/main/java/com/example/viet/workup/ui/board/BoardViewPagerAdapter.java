@@ -17,25 +17,24 @@ import java.util.ArrayList;
 public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
     public static final String TAG = "BoardViewPagerAdapter";
     private ArrayList<CardList> mArrCardList;
+    private ArrayList<String> mArrCardListKey;
     private String boardKey;
+    private ArrayList<Fragment> arrFragment = new ArrayList<>();
 
-    public BoardViewPagerAdapter(FragmentManager fm, String boardKey, ArrayList<CardList> arrCardList) {
+    public BoardViewPagerAdapter(FragmentManager fm, String boardKey, ArrayList<CardList> arrCardList, ArrayList<String> arrCardListKey) {
         super(fm);
         this.boardKey = boardKey;
         this.mArrCardList = arrCardList;
+        this.mArrCardListKey = arrCardListKey;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return CardFragment.newInstance(boardKey, mArrCardList.get(position).getKey());
+        return arrFragment.get(position);
     }
 
     @Override
     public int getItemPosition(Object object) {
-        int index = mArrCardList.indexOf(object);
-        if (index > -1) {
-            return index;
-        }
         return POSITION_NONE;
     }
 
@@ -48,21 +47,25 @@ public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
         try {
             if (cardList != null) {
                 mArrCardList.add(cardList);
+                mArrCardListKey.add(cardList.getKey());
+                arrFragment.add(CardFragment.newInstance(boardKey,cardList.getKey()));
                 notifyDataSetChanged();
             }
-        }catch (Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
     public void removeItem(int position) {
         try {
-            if (position > -1) {
+            if (position > -1 && position < mArrCardList.size()) {
                 mArrCardList.remove(position);
+                mArrCardListKey.remove(position);
+                arrFragment.remove(position);
                 notifyDataSetChanged();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

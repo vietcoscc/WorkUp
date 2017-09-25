@@ -6,12 +6,14 @@ import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
+import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.Comment;
 import com.example.viet.workup.model.DueDate;
 import com.example.viet.workup.model.Label;
 import com.example.viet.workup.model.UserInfo;
 import com.example.viet.workup.model.WorkList;
 import com.example.viet.workup.utils.CalendarUtils;
+import com.example.viet.workup.utils.DataUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -21,8 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrActivityRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrCommentListRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrWorkListRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.cardDataRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.cardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.commentCountRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.coverImageCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.descriptionCardRef;
@@ -42,6 +47,20 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
     @Inject
     public WorkPresenter() {
+    }
+
+    @Override
+    public void onDeleteCard(String cardKey,String title) {
+        cardDataRef(cardKey).removeValue();
+        cardRef(cardKey).removeValue();
+        String from = mAccountManager.getCurrentUser().getDisplayName();
+        String message = " removed card  ";
+        String target = title;
+        String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
+        arrActivityRef(cardKey.split("\\+")[1]).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+        if (getmMvpView() != null) {
+            getmMvpView().finishActivity();
+        }
     }
 
     @Override
@@ -96,6 +115,13 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void onChangeTitle(String cardKey, String title) {
+        if (DataUtils.isCardTitleValid(title)) {
+            titleCardRed(cardKey).setValue(title.trim());
+        }
+    }
+
+    @Override
     public void onReceiveDescription(String cardKey) {
         if (TextUtils.isEmpty(cardKey)) {
             Log.e(TAG, "Empty!");
@@ -108,7 +134,9 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
                 if (TextUtils.isEmpty(des)) {
                     return;
                 }
-                getmMvpView().showDes(des);
+                if (getmMvpView() != null) {
+                    getmMvpView().showDes(des);
+                }
             }
 
             @Override
@@ -116,6 +144,14 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
             }
         });
+    }
+
+    @Override
+    public void onChangeDescription(String cardKey, String des) {
+        if (DataUtils.isCardDescriptionValid(des)) {
+            descriptionCardRef(cardKey).setValue(des);
+        }
+
     }
 
     @Override
@@ -220,7 +256,11 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
         arrWorkListRef(cardKey).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.getKey().equals("arrTask")) {
+                    return;
+                }
                 WorkList workList = dataSnapshot.getValue(WorkList.class);
+                workList.setKey(dataSnapshot.getKey());
                 if (workList == null) {
                     return;
                 }
@@ -231,12 +271,21 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                if (dataSnapshot.getKey().equals("arrTask")) {
+                    return;
+                }
+                WorkList workList = dataSnapshot.getValue(WorkList.class);
+                workList.setKey(dataSnapshot.getKey());
+                if (getmMvpView() != null) {
+                    getmMvpView().changeWorkList(workList);
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                if (getmMvpView() != null) {
+                    getmMvpView().deleteWorkList(dataSnapshot.getKey());
+                }
             }
 
             @Override
@@ -339,7 +388,7 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot1) {
                         Comment comment = new Comment(userInfo, content.trim(), CalendarUtils.getCurrentTime());
-                        arrCommentListRef(cardKey).child(dataSnapshot1.getChildrenCount() + "").setValue(comment)
+                        arrCommentListRef(cardKey).push().setValue(comment)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

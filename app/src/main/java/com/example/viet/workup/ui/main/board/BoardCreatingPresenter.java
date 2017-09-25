@@ -43,7 +43,7 @@ public class BoardCreatingPresenter<V extends BoardCreatingMvpView> extends Base
             return;
         }
         getmMvpView().showProgress();
-        Board board = new Board(name, 0, isChecked);
+        Board board = new Board(name.trim(), 0, isChecked);
         DatabaseReference ref;
         if (isChecked) {
             ref = starBoardRef(mAccountManager.getmAuth().getCurrentUser().getUid());
@@ -53,6 +53,7 @@ public class BoardCreatingPresenter<V extends BoardCreatingMvpView> extends Base
         ref.push().setValue(board).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+
                 if (getmMvpView() != null) {
                     getmMvpView().hideProgress();
                     getmMvpView().showMessge("onSuccess");

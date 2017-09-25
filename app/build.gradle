@@ -28,11 +28,9 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support:cardview-v7:26.0.0-alpha1'
     compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.android.support:support-v4:26.+'
     compile 'org.quanqi:android-view-pager-indicator:0.9.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -49,18 +47,13 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.google.code.gson:gson:2.6.1'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.andraskindler.parallaxviewpager:parallaxviewpager:0.3.1'
+    compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-storage:10.0.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
     provided 'javax.annotation:jsr250-api:1.0'
-    compile 'com.andraskindler.parallaxviewpager:parallaxviewpager:0.3.1'
 }
-
-
-
-
-
-
-
 apply plugin: 'com.google.gms.google-services'

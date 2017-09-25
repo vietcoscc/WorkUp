@@ -5,8 +5,10 @@ import android.text.TextUtils;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
+import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.UserInfo;
 import com.example.viet.workup.model.image.OtherBoard;
+import com.example.viet.workup.utils.CalendarUtils;
 import com.example.viet.workup.utils.FireBaseDatabaseUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrActivityRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.memberBoardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.otherBoardRef;
 
@@ -33,7 +36,7 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.otherBoardRef;
  */
 
 public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePresenter<V> implements MemberAddingMvpPresenter<V> {
-    private AccountManager accountManager = AccountManager.getsInstance();
+    private AccountManager mAccountManager = AccountManager.getsInstance();
 
     @Inject
     public MemberAddingPresenter() {
@@ -111,11 +114,11 @@ public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePr
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<UserInfo>() {
             @Override
-            public void accept(UserInfo userInfo) throws Exception {
+            public void accept(final UserInfo userInfo) throws Exception {
                 if (userInfo == null) {
                     return;
                 }
-                if (userInfo.getUid().equals(accountManager.getCurrentUser().getUid())) {
+                if (userInfo.getUid().equals(mAccountManager.getCurrentUser().getUid())) {
                     getmMvpView().showMessge("Cant add yourself");
                     return;
                 }
@@ -129,14 +132,19 @@ public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePr
                     return;
                 }
                 memberBoardRef(boardKey).child(userInfo.getUid()).setValue(userInfo);
-                OtherBoard otherBoard = new OtherBoard(accountManager.getUserInfo().getUid(), boardKey, isStar);
+                OtherBoard otherBoard = new OtherBoard(mAccountManager.getUserInfo().getUid(), boardKey, isStar);
                 otherBoardRef(userInfo.getUid())
-                        .child(accountManager.getUserInfo().getUid() + "+" + boardKey)
+                        .child(mAccountManager.getUserInfo().getUid() + "+" + boardKey)
                         .setValue(otherBoard)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                if(getmMvpView()!=null){
+                                String from = mAccountManager.getCurrentUser().getDisplayName();
+                                String message = " added member : ";
+                                String target = userInfo.getDisplayName();
+                                String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
+                                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                                if (getmMvpView() != null) {
                                     getmMvpView().hideProgress();
                                     getmMvpView().showMessge("onSuccess");
                                 }
@@ -145,7 +153,7 @@ public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePr
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                if(getmMvpView()!=null){
+                                if (getmMvpView() != null) {
                                     getmMvpView().hideProgress();
                                     getmMvpView().showMessge("onFailure");
                                 }

@@ -41,6 +41,7 @@
             android:visibility="gone" />
 
         <EditText
+            android:hint="Label"
             android:id="@+id/edtLabel"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -1,7 +1,5 @@
 package com.example.viet.workup.ui.introduced;
 
-import android.content.Context;
-
 import com.example.viet.workup.base.MvpPresenter;
 
 /**
@@ -9,7 +7,7 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface IntroducedMvpPresenter<V extends IntroducedMvpView> extends MvpPresenter<V> {
-    void onCheckLogin( );
+    void onCheckLogin();
 
     void onButtonLoginClick();
 

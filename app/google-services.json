@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "67001948199",
-    "firebase_url": "https://workup-124dd.firebaseio.com",
-    "project_id": "workup-124dd",
-    "storage_bucket": "workup-124dd.appspot.com"
+    "project_number": "55078897345",
+    "firebase_url": "https://workup-fc11b.firebaseio.com",
+    "project_id": "workup-fc11b",
+    "storage_bucket": "workup-fc11b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:67001948199:android:d4891a03b3d34b1f",
+        "mobilesdk_app_id": "1:55078897345:android:d4891a03b3d34b1f",
         "android_client_info": {
           "package_name": "com.example.viet.workup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "67001948199-6h55bbgachl2uo1vujs6fhq8v8v5frgt.apps.googleusercontent.com",
+          "client_id": "55078897345-l4vteks6ncpi90bkfi4fk1vjcp0htv9h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.viet.workup",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "67001948199-sqdu259842u4cohqeh66bu6sn2usr6rr.apps.googleusercontent.com",
+          "client_id": "55078897345-6rn6n6is1n3spdva1e393ksrbi2beqlc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDKyUgDp3BRoPDIitNYFQt-sHYj15B5Yxg"
+          "current_key": "AIzaSyAZa3yXwyXg5GdL6VJFNb0CdA7PtJ3Uh2Q"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "67001948199-sqdu259842u4cohqeh66bu6sn2usr6rr.apps.googleusercontent.com",
+              "client_id": "55078897345-6rn6n6is1n3spdva1e393ksrbi2beqlc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

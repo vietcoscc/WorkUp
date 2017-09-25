@@ -7,7 +7,11 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface CardMvpPresenter<V extends CardMvpView> extends MvpPresenter<V> {
+    void onReceiveTitle(String boardKey, String cardListKey);
+
+    void onChangeTitle(String boardKey, String cardListKey, String title);
+
     void onReceiveData(String boardKey, String cardListKey);
 
-    void onCardClick(String boardKey,String cardListKey,String position);
+    void onCardClick(String boardKey, String cardListKey, String position);
 }

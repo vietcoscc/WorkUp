@@ -7,40 +7,73 @@ import java.util.ArrayList;
  */
 
 public class Card {
+    private String boardKey;
+    private String cardListKey;
     private String key;
 
     private String coverImageUrl;
-    private ArrayList<Label> arrLabel;
     private String title;
     private int commentCount;
-    private int attachment;
     private String checkWork;
     private DueDate dueDate;
+    private ArrayList<Label> arrLabel;
     private ArrayList<UserInfo> arrUserInfo;
     private boolean hasDescription;
+    private String description;
 
     public Card() {
 
     }
 
     public Card(String coverImageUrl,
-                ArrayList<Label> arrLabel,
                 String title,
                 int commentCount,
-                int attachment,
                 String checkWork,
                 DueDate dueDate,
+                ArrayList<Label> arrLabel,
                 ArrayList<UserInfo> arrUserInfo,
-                boolean hasDescription) {
+                boolean hasDescription, String description) {
         this.coverImageUrl = coverImageUrl;
-        this.arrLabel = arrLabel;
         this.title = title;
         this.commentCount = commentCount;
-        this.attachment = attachment;
         this.checkWork = checkWork;
         this.dueDate = dueDate;
+        this.arrLabel = arrLabel;
         this.arrUserInfo = arrUserInfo;
         this.hasDescription = hasDescription;
+        this.description = description;
+    }
+
+    public String getBoardKey() {
+        return boardKey;
+    }
+
+    public void setBoardKey(String boardKey) {
+        this.boardKey = boardKey;
+    }
+
+    public String getCardListKey() {
+        return cardListKey;
+    }
+
+    public void setCardListKey(String cardListKey) {
+        this.cardListKey = cardListKey;
+    }
+
+    public ArrayList<Label> getArrLabel() {
+        return arrLabel;
+    }
+
+    public void setArrLabel(ArrayList<Label> arrLabel) {
+        this.arrLabel = arrLabel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getKey() {
@@ -59,14 +92,6 @@ public class Card {
         this.coverImageUrl = coverImageUrl;
     }
 
-    public ArrayList<Label> getArrLabel() {
-        return arrLabel;
-    }
-
-    public void setArrLabel(ArrayList<Label> arrLabel) {
-        this.arrLabel = arrLabel;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -83,13 +108,6 @@ public class Card {
         this.commentCount = commentCount;
     }
 
-    public int getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(int attachment) {
-        this.attachment = attachment;
-    }
 
     public String getCheckWork() {
         return checkWork;
@@ -121,5 +139,9 @@ public class Card {
 
     public void setHasDescription(boolean hasDescription) {
         this.hasDescription = hasDescription;
+    }
+
+    public String getCardKey() {
+        return boardKey + "+" + cardListKey + "+" + key;
     }
 }

@@ -23,6 +23,7 @@
             android:theme="@style/LoginTheme" />
         <activity
             android:name=".ui.introduced.IntroducedActivity"
+            android:noHistory="true"
             android:theme="@style/IntroducedTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +49,8 @@
         <activity
             android:name=".ui.image.item.ItemActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
+
+        <service android:name=".service.NotificationService" />
     </application>
 
 </manifest>

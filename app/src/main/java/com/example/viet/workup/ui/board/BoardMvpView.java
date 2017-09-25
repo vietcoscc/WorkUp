@@ -1,6 +1,7 @@
 package com.example.viet.workup.ui.board;
 
 import com.example.viet.workup.base.MvpView;
+import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.CardList;
 
 
@@ -11,9 +12,13 @@ import com.example.viet.workup.model.CardList;
 public interface BoardMvpView extends MvpView {
     void showArrCardList(CardList cardList);
 
+    void showArrActivity(BoardUserActivity boardUserActivity);
+
     void hideCardList(String cardListKey);
 
     void showBackground(int id);
+
+    void finishAcitivity();
 
     void showAddingListDialog();
 

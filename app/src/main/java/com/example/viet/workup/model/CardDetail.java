@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class CardDetail {
     private String description;
     private String dueTime;
-    private ArrayList<String> arrAttachFile;
     private ArrayList<WorkList> arrWorkList;
     private ArrayList<Comment> arrComment;
 
@@ -24,7 +23,6 @@ public class CardDetail {
 
         this.description = description;
         this.dueTime = dueTime;
-        this.arrAttachFile = arrAttachFile;
         this.arrWorkList = arrWorkList;
         this.arrComment = arrComment;
     }
@@ -51,14 +49,6 @@ public class CardDetail {
 
     public void setDueTime(String dueTime) {
         this.dueTime = dueTime;
-    }
-
-    public ArrayList<String> getArrAttachFile() {
-        return arrAttachFile;
-    }
-
-    public void setArrAttachFile(ArrayList<String> arrAttachFile) {
-        this.arrAttachFile = arrAttachFile;
     }
 
     public ArrayList<WorkList> getArrWorkList() {

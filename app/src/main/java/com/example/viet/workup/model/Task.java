@@ -5,6 +5,7 @@ package com.example.viet.workup.model;
  */
 
 public class Task {
+    private String key;
     private String task;
     private boolean hasDone;
 
@@ -14,6 +15,14 @@ public class Task {
     public Task(String task, boolean hasDone) {
         this.task = task;
         this.hasDone = hasDone;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getTask() {

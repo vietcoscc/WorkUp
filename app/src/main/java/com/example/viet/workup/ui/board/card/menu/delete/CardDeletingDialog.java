@@ -24,12 +24,14 @@ public class CardDeletingDialog extends BaseDialogFragment implements CardDeleti
     CardDeletingPresenter<CardDeletingMvpView> mPresenter;
     private String mBoardKey;
     private String mCardListKey;
+    private String mCardListName;
 
-    public static CardDeletingDialog newInstance(String boardKey, String cardListKey) {
+    public static CardDeletingDialog newInstance(String boardKey, String cardListKey, String cardListName) {
 
         Bundle args = new Bundle();
         args.putString(BOARD, boardKey);
         args.putString(CARD_LIST, cardListKey);
+        args.putString("cardListNAme", cardListName);
         CardDeletingDialog fragment = new CardDeletingDialog();
         fragment.setArguments(args);
         return fragment;
@@ -41,6 +43,7 @@ public class CardDeletingDialog extends BaseDialogFragment implements CardDeleti
         if (getArguments() != null) {
             mBoardKey = getArguments().getString(BOARD);
             mCardListKey = getArguments().getString(CARD_LIST);
+            mCardListName = getArguments().getString("cardListNAme");
         }
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
@@ -61,13 +64,15 @@ public class CardDeletingDialog extends BaseDialogFragment implements CardDeleti
                         if (isOnProgress()) {
                             return;
                         }
-                        mPresenter.onDeleteCardList(mBoardKey, mCardListKey);
+                        mPresenter.onDeleteCardList(mBoardKey, mCardListKey,mCardListName);
+                        mDialog.dismiss();
                     }
                 });
             }
         });
         return mDialog;
     }
+
     @Override
     public void onDestroy() {
         mPresenter.onDetach();

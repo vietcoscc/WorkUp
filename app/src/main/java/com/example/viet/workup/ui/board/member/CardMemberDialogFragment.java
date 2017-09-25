@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.BOARD;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.STAR_BOARD;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.UID;
 
 /**
@@ -33,7 +35,7 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.UID;
  */
 
 public class CardMemberDialogFragment extends BaseDialogFragment implements CardMemberMvpView {
-
+    public static final String TAG = "CardMemberDialogFragment";
     @BindView(R.id.recyclerViewMember)
     RecyclerView recyclerViewMember;
 
@@ -42,15 +44,16 @@ public class CardMemberDialogFragment extends BaseDialogFragment implements Card
     CardMemberPresenter<CardMemberMvpView> mPresenter;
     private String mBoardKey;
     private String mBoardUid;
-
+    private boolean isStar;
     private ArrayList<UserInfo> arrUserInfoCard = new ArrayList<>();
     private ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
     private ArrayList<Boolean> arrBit = new ArrayList<>();
 
-    public static CardMemberDialogFragment newInstance(String boardKey, String boardUid) {
+    public static CardMemberDialogFragment newInstance(String boardKey, String boardUid, boolean isStar) {
         Bundle args = new Bundle();
         args.putString(BOARD, boardKey);
         args.putString(UID, boardUid);
+        args.putBoolean(STAR_BOARD, isStar);
         CardMemberDialogFragment fragment = new CardMemberDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -62,6 +65,7 @@ public class CardMemberDialogFragment extends BaseDialogFragment implements Card
         if (getArguments() != null) {
             mBoardKey = getArguments().getString(BOARD);
             mBoardUid = getArguments().getString(UID);
+            isStar = getArguments().getBoolean(STAR_BOARD);
         }
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
@@ -75,7 +79,9 @@ public class CardMemberDialogFragment extends BaseDialogFragment implements Card
         View view = inflater.inflate(R.layout.dialog_card_member, container, false);
         ButterKnife.bind(this, view);
         recyclerViewMember.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        mAdapter = new CardMemberRecyclerViewAdapetr(arrUserInfo, mBoardKey, mBoardUid.equals(AccountManager.getsInstance().getCurrentUser().getUid()));
+        Log.e(TAG,mBoardUid);
+        Log.e(TAG,AccountManager.getsInstance().getCurrentUser().getUid());
+        mAdapter = new CardMemberRecyclerViewAdapetr(arrUserInfo, mBoardKey, isStar, mBoardUid.equals(AccountManager.getsInstance().getCurrentUser().getUid()));
         recyclerViewMember.setAdapter(mAdapter);
         mDialog.setView(view);
         return view;

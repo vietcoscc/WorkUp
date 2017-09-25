@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Card;
@@ -30,12 +31,15 @@ import butterknife.ButterKnife;
 
 public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Card> mArrCard;
+    private ArrayList<String> mArrCardKey;
     private Context mContext;
     private Listener.OnItemClickListenter mOnItemClickListenter;
     private int lastPosition = -1;
 
-    public CardRecyclerViewAdapter(ArrayList<Card> arrCard) {
+    public CardRecyclerViewAdapter(ArrayList<Card> arrCard, ArrayList<String> arrCardKey) {
+        arrCard.clear();
         this.mArrCard = arrCard;
+        this.mArrCardKey = arrCardKey;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.ivCover)
         ImageView ivCover;
-//        @BindView(R.id.ivAttachment)
+        //        @BindView(R.id.ivAttachment)
 //        ImageView ivAttachment;
         @BindView(R.id.ivComment)
         ImageView ivComment;
@@ -82,8 +86,6 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         TextView tvTitle;
         @BindView(R.id.tvComment)
         TextView tvComment;
-//        @BindView(R.id.tvAttachemt)
-//        TextView tvAttachment;
         @BindView(R.id.tvCheck)
         TextView tvCheck;
         @BindView(R.id.tvDueDate)
@@ -114,7 +116,6 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             String coverImageUrl = card.getCoverImageUrl();
             String title = card.getTitle();
             int commentCount = card.getCommentCount();
-            int attachment = card.getAttachment();
             String checkWork = card.getCheckWork();
             DueDate dueDate = card.getDueDate();
             ArrayList<Label> labels = card.getArrLabel();
@@ -125,20 +126,14 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ivCover.setVisibility(View.GONE);
             } else {
                 ivCover.setVisibility(View.VISIBLE);
-                Picasso.with(mContext)
+                Glide.with(mContext)
                         .load(coverImageUrl)
-                        .resize(500,300)
                         .centerCrop()
                         .placeholder(android.R.drawable.screen_background_light)
                         .error(android.R.drawable.screen_background_dark)
                         .into(ivCover);
             }
-//            if (attachment == 0) {
-//                ivAttachment.setVisibility(View.GONE);
-//                tvAttachment.setVisibility(View.GONE);
-//            } else {
-//                tvAttachment.setText(attachment + "");
-//            }
+
             if (commentCount == 0) {
                 ivComment.setVisibility(View.GONE);
                 tvComment.setVisibility(View.GONE);
@@ -189,7 +184,26 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void addItem(Card card) {
         mArrCard.add(card);
+        mArrCardKey.add(card.getKey());
         notifyItemInserted(mArrCard.size() - 1);
+    }
+
+    public void clearItem() {
+        mArrCard.clear();
+        mArrCardKey.clear();
+        notifyDataSetChanged();
+    }
+
+    public void changeItem(Card card, int position) {
+        mArrCard.set(position, card);
+        mArrCardKey.set(position, card.getKey());
+        notifyItemChanged(position);
+    }
+
+    public void removeItem(int position) {
+        mArrCard.remove(position);
+        mArrCardKey.remove(position);
+        notifyItemRemoved(position);
     }
 
     public void setOnItemClickListenter(Listener.OnItemClickListenter onItemClickListenter) {

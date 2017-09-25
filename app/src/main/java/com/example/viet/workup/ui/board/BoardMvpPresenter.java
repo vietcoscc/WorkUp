@@ -9,5 +9,9 @@ import com.example.viet.workup.base.MvpPresenter;
 public interface BoardMvpPresenter<V extends BoardMvpView> extends MvpPresenter<V> {
     void onReceiveData(String key);
 
+    void onReceiveActivity(String key);
+
+    void onReceiveMember(String key);
+
     void onReceiveBackground(String uid, String boardKey, boolean isStar);
 }

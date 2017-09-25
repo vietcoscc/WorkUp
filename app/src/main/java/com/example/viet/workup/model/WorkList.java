@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class WorkList {
+    private String key;
     private String title;
     private int doneCount = 0;
     private ArrayList<Task> arrTask;
@@ -18,6 +19,14 @@ public class WorkList {
         this.title = title;
         this.doneCount = doneCount;
         this.arrTask = arrTask;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public int getDoneCount() {

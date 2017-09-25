@@ -5,17 +5,23 @@ import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
+import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.CardList;
+import com.example.viet.workup.model.UserInfo;
 import com.example.viet.workup.utils.ApplicationUtils;
-import com.example.viet.workup.utils.FireBaseDatabaseUtils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Member;
+
 import javax.inject.Inject;
 
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrActivityRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.boardDataRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.boardImageUrlRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.memberBoardRef;
 
 /**
  * Created by viet on 02/09/2017.
@@ -34,10 +40,19 @@ public class BoardPresenter<V extends BoardMvpView> extends BasePresenter<V> imp
         if (TextUtils.isEmpty(key)) {
             return;
         }
-        FireBaseDatabaseUtils.boardDataRef(key).addChildEventListener(new ChildEventListener() {
+        if (getmMvpView() != null) {
+            getmMvpView().showProgress();
+        }
+        boardDataRef(key).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals("member")) {
+                    return;
+                }
+                if (dataSnapshot.getKey().equals("arrCard")) {
+                    return;
+                }
+                if (dataSnapshot.getKey().equals("arrActivity")) {
                     return;
                 }
                 CardList cardList = dataSnapshot.getValue(CardList.class);
@@ -71,7 +86,86 @@ public class BoardPresenter<V extends BoardMvpView> extends BasePresenter<V> imp
 
             }
         });
+        boardDataRef(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (getmMvpView() != null) {
+                    getmMvpView().hideProgress();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onReceiveActivity(String key) {
+        arrActivityRef(key).limitToLast(30).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                BoardUserActivity boardUserActivity = dataSnapshot.getValue(BoardUserActivity.class);
+                if (getmMvpView() != null) {
+                    getmMvpView().showArrActivity(boardUserActivity);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onReceiveMember(String key) {
+        memberBoardRef(key).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getKey().equals(mAccountManager.getCurrentUser().getUid())){
+                    if(getmMvpView()!=null){
+                        getmMvpView().finishAcitivity();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

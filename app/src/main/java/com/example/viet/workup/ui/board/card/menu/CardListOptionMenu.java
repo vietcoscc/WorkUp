@@ -9,7 +9,6 @@ import com.example.viet.workup.R;
 import com.example.viet.workup.base.BasePopupMenu;
 import com.example.viet.workup.ui.board.card.menu.create.CardCreatingDialog;
 import com.example.viet.workup.ui.board.card.menu.delete.CardDeletingDialog;
-import com.example.viet.workup.ui.board.card.menu.move.CardMovingDialog;
 
 import javax.inject.Inject;
 
@@ -19,19 +18,21 @@ import javax.inject.Inject;
 
 public class CardListOptionMenu extends BasePopupMenu implements CardListMvpView, MenuItem.OnMenuItemClickListener {
     private MenuItem mItemAddCard;
-    private MenuItem mItemMoveList;
+    //    private MenuItem mItemMoveList;
     private MenuItem mItemArchiveList;
     private String mBoardKey;
     private String mCardListKey;
+    private String mCardListName;
     private Context mContext;
     @Inject
     CardListPresenter<CardListMvpView> mPresenter;
 
-    public CardListOptionMenu(Context context, View anchor, String boardKey, String cardListKey) {
+    public CardListOptionMenu(Context context, View anchor, String boardKey, String cardListKey, String cardListName) {
         super(context, anchor);
         this.mContext = context;
         this.mBoardKey = boardKey;
         this.mCardListKey = cardListKey;
+        this.mCardListName = cardListName;
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
         initViews();
@@ -40,10 +41,10 @@ public class CardListOptionMenu extends BasePopupMenu implements CardListMvpView
     private void initViews() {
         getMenuInflater().inflate(R.menu.card_list_popup_menu, getMenu());
         mItemAddCard = getMenu().findItem(R.id.action_add);
-        mItemMoveList = getMenu().findItem(R.id.action_move);
+//        mItemMoveList = getMenu().findItem(R.id.action_move);
         mItemArchiveList = getMenu().findItem(R.id.action_delete);
         mItemAddCard.setOnMenuItemClickListener(this);
-        mItemMoveList.setOnMenuItemClickListener(this);
+//        mItemMoveList.setOnMenuItemClickListener(this);
         mItemArchiveList.setOnMenuItemClickListener(this);
     }
 
@@ -55,13 +56,13 @@ public class CardListOptionMenu extends BasePopupMenu implements CardListMvpView
             AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
             cardCreatingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
         }
-        if (id == R.id.action_move) {
-            CardMovingDialog cardMovingDialog = CardMovingDialog.newInstance(mBoardKey, mCardListKey);
-            AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
-            cardMovingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
-        }
+//        if (id == R.id.action_move) {
+//            CardMovingDialog cardMovingDialog = CardMovingDialog.newInstance(mBoardKey, mCardListKey);
+//            AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
+//            cardMovingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
+//        }
         if (id == R.id.action_delete) {
-            CardDeletingDialog cardDeletingDialog = CardDeletingDialog.newInstance(mBoardKey, mCardListKey);
+            CardDeletingDialog cardDeletingDialog = CardDeletingDialog.newInstance(mBoardKey, mCardListKey, mCardListName);
             AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
             cardDeletingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
         }

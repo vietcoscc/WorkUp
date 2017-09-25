@@ -12,6 +12,10 @@ public interface CardMvpView extends MvpView {
 
     void showCard(Card card);
 
+    void removeCard(Card card);
+
+    void changeCard(Card card);
+
     void showCreateError(String message);
 
     void showCardDetail(String cardKey);

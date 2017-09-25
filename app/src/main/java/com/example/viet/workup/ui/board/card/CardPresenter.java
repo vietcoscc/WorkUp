@@ -4,16 +4,24 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.viet.workup.base.BasePresenter;
+import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Card;
-import com.example.viet.workup.model.CardList;
+import com.example.viet.workup.model.CardDetail;
+import com.example.viet.workup.model.Comment;
+import com.example.viet.workup.model.Task;
+import com.example.viet.workup.model.UserInfo;
+import com.example.viet.workup.model.WorkList;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrCardRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.cardDataRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.cardListRef;
 
 /**
@@ -21,6 +29,7 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.cardListRef;
  */
 
 public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> implements CardMvpPresenter<V> {
+    private AccountManager mAccountManager = AccountManager.getsInstance();
     private static final String TAG = "CardListPresenter";
 
     @Inject
@@ -29,30 +38,86 @@ public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void onReceiveTitle(String boardKey, String cardListKey) {
+        cardListRef(boardKey, cardListKey).child("title").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = dataSnapshot.getValue(String.class);
+                if (!TextUtils.isEmpty(title) && getmMvpView() != null) {
+                    getmMvpView().showListTitle(title);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onChangeTitle(String boardKey, String cardListKey, String title) {
+        cardListRef(boardKey, cardListKey).child("title").setValue(title.trim());
+    }
+
+    @Override
     public void onReceiveData(final String boardKey, final String cardListKey) {
         if (TextUtils.isEmpty(boardKey) || TextUtils.isEmpty(cardListKey)) {
             Log.e(TAG, "Empty!");
             return;
         }
-        final ChildEventListener childEventListener = new ChildEventListener() {
+
+        arrCardRef(boardKey, cardListKey).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Card card = dataSnapshot.getValue(Card.class);
+                if (dataSnapshot.getKey().equals("arrLabel")) {
+                    return;
+                }
+                final Card card = dataSnapshot.getValue(Card.class);
+                card.setBoardKey(boardKey);
+                card.setCardListKey(cardListKey);
                 card.setKey(dataSnapshot.getKey());
-                Log.i(TAG, dataSnapshot.getKey());
                 if (getmMvpView() != null) {
                     getmMvpView().showCard(card);
                 }
+                cardDataRef(boardKey + "+" + cardListKey + "+" + card.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            CardDetail cardDetail = generateCardDetail(card, card.getDescription());
+                            cardDataRef(dataSnapshot.getKey()).setValue(cardDetail);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Log.i(TAG, dataSnapshot.getKey());
+
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Card card = dataSnapshot.getValue(Card.class);
+                card.setBoardKey(boardKey);
+                card.setCardListKey(cardListKey);
+                card.setKey(dataSnapshot.getKey());
+                if (getmMvpView() != null) {
+                    getmMvpView().changeCard(card);
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Card card = dataSnapshot.getValue(Card.class);
+                card.setBoardKey(boardKey);
+                card.setCardListKey(cardListKey);
+                card.setKey(dataSnapshot.getKey());
+                if (getmMvpView() != null) {
+                    getmMvpView().removeCard(card);
+                }
             }
 
             @Override
@@ -64,25 +129,8 @@ public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> imple
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        };
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                CardList cardList = dataSnapshot.getValue(CardList.class);
-                if (getmMvpView() != null) {
-                    getmMvpView().showListTitle(cardList.getTitle());
-                }
-                arrCardRef(boardKey, cardListKey).addChildEventListener(childEventListener);
-            }
+        });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        arrCardRef(boardKey, cardListKey).removeEventListener(childEventListener);
-        cardListRef(boardKey, cardListKey).removeEventListener(valueEventListener);
-        cardListRef(boardKey, cardListKey).addListenerForSingleValueEvent(valueEventListener);
     }
 
     @Override
@@ -98,5 +146,16 @@ public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> imple
         getmMvpView().showCardDetail(cardKey);
     }
 
-
+    private CardDetail generateCardDetail(Card card, String description) {
+        String dueTime = "14:09";
+        ArrayList<Task> arrTask = new ArrayList<>();
+        WorkList workList = new WorkList("title", 0, arrTask);
+        ArrayList<WorkList> arrWorkList = new ArrayList<>();
+        UserInfo userInfo =
+                mAccountManager.getUserInfo();
+        Comment comment = new Comment(userInfo, "Nguyen Quoc Viet", "");
+        ArrayList<Comment> arrComment = new ArrayList<>();
+        ArrayList<String> arrAttachFile = new ArrayList<>();
+        return new CardDetail(description, dueTime, arrAttachFile, arrWorkList, arrComment);
+    }
 }

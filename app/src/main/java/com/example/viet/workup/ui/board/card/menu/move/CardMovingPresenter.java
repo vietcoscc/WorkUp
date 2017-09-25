@@ -121,68 +121,68 @@ public class CardMovingPresenter<V extends CardMovingMvpView> extends BasePresen
             Log.e(TAG, "Empty|");
             return;
         }
-        getmMvpView().showProgress();
-        cardListRef(srcBoardKey, cardListKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                CardList cardList = dataSnapshot.getValue(CardList.class);
-                if (cardList == null) {
-                    return;
-                }
-                ArrayList<Card> cards = cardList.getArrCard();
-                if(cards != null){
-                    for (int i = 0; i < cards.size(); i++) {
-                        final int position = i;
-                        cardDataRef(srcBoardKey + "+" + cardListKey + "+" + i).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                CardDetail cardDetail = dataSnapshot.getValue(CardDetail.class);
-
-                                cardDataRef(desBoardKey + "+" + cardListKey + "+" + position).setValue(cardDetail);
-                                cardDataRef(srcBoardKey + "+" + cardListKey + "+" + position).removeValue();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-
-                boardDataRef(desBoardKey).child(cardListKey).setValue(cardList).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        cardListRef(srcBoardKey, cardListKey).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                if (getmMvpView() == null) {
-                                    return;
-                                }
-                                getmMvpView().hideProgress();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                if (getmMvpView() == null) {
-                                    return;
-                                }
-                                getmMvpView().hideProgress();
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        cardListRef(desBoardKey, cardListKey).removeValue();
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        getmMvpView().showProgress();
+//        cardListRef(srcBoardKey, cardListKey).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                CardList cardList = dataSnapshot.getValue(CardList.class);
+//                if (cardList == null) {
+//                    return;
+//                }
+//                ArrayList<Card> cards = cardList.getArrCard();
+//                if(cards != null){
+//                    for (int i = 0; i < cards.size(); i++) {
+//                        final int position = i;
+//                        cardDataRef(srcBoardKey + "+" + cardListKey + "+" + i).addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                CardDetail cardDetail = dataSnapshot.getValue(CardDetail.class);
+//
+//                                cardDataRef(desBoardKey + "+" + cardListKey + "+" + position).setValue(cardDetail);
+//                                cardDataRef(srcBoardKey + "+" + cardListKey + "+" + position).removeValue();
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                    }
+//                }
+//
+//                boardDataRef(desBoardKey).child(cardListKey).setValue(cardList).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        cardListRef(srcBoardKey, cardListKey).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                if (getmMvpView() == null) {
+//                                    return;
+//                                }
+//                                getmMvpView().hideProgress();
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                if (getmMvpView() == null) {
+//                                    return;
+//                                }
+//                                getmMvpView().hideProgress();
+//                            }
+//                        });
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        cardListRef(desBoardKey, cardListKey).removeValue();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 }

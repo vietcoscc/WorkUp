@@ -123,7 +123,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 }
                 board.setKey(dataSnapshot.getKey());
                 board.setParentKey(dataSnapshot.getRef().getParent().getKey());
-                getmMvpView().showOtherBoardReceived(board);
+                if (getmMvpView() != null) {
+                    getmMvpView().showOtherBoardReceived(board);
+                }
             }
 
             @Override
@@ -151,7 +153,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                String key = dataSnapshot.getKey();
+                if (getmMvpView() != null) {
+                    getmMvpView().removeOtherBoard(key.split("\\+")[0], key.split("\\+")[1]);
+                }
             }
 
             @Override
@@ -168,22 +173,16 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     private Board onChilAdded(DataSnapshot dataSnapshot) {
         final String key = dataSnapshot.getKey();
-        boardDataRef(key).addValueEventListener(getValueEventListener(key));
-        Board board = dataSnapshot.getValue(Board.class);
-        board.setKey(key);
-        return board;
-    }
-
-    private ValueEventListener getValueEventListener(final String key) {
-        return new ValueEventListener() {
+        Log.i(TAG, key);
+        boardDataRef(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     return;
                 }
-                CardList todo = new CardList("Todo", null);
-                CardList doing = new CardList("Doing", null);
-                CardList done = new CardList("Done", null);
+                CardList todo = new CardList("Todo");
+                CardList doing = new CardList("Doing");
+                CardList done = new CardList("Done");
                 boardDataRef(key).push().setValue(todo);
                 boardDataRef(key).push().setValue(doing);
                 boardDataRef(key).push().setValue(done);
@@ -191,8 +190,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.i(TAG, databaseError.getMessage() + " " + databaseError.getDetails());
+
             }
-        };
+        });
+        Board board = dataSnapshot.getValue(Board.class);
+        board.setKey(key);
+        return board;
     }
+
 }

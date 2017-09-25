@@ -15,13 +15,14 @@ import com.example.viet.workup.di.component.ActivityComponent;
 
 public class BaseActivity extends AppCompatActivity implements MvpView {
     private ActivityComponent mActivityComponent;
-    protected ProgressDialog progressDialog;
+    protected ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading ... ");
+        mProgressDialog.setCancelable(false);
         hideProgress();
         MyApplication myApplication = (MyApplication) getApplication();
         mActivityComponent = myApplication.getmActivityComponent();
@@ -30,12 +31,12 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
     @Override
     public void showProgress() {
-        progressDialog.show();
+        mProgressDialog.show();
     }
 
     @Override
     public void hideProgress() {
-        progressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView {
 
     @Override
     public boolean isOnProgress() {
-        if (progressDialog != null &&progressDialog.isShowing()) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return true;
         }
         return false;

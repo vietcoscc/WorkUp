@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseActivity;
 import com.example.viet.workup.manager.AccountManager;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;

@@ -5,11 +5,14 @@ import android.text.TextUtils;
 
 import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.manager.AccountManager;
+import com.example.viet.workup.model.BoardUserActivity;
+import com.example.viet.workup.utils.CalendarUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import javax.inject.Inject;
 
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrActivityRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.boardImageUrlRef;
 
 /**
@@ -26,7 +29,7 @@ public class BackgroundPresenter<V extends BackgroundMvpView> extends BasePresen
 
 
     @Override
-    public void onUpdateBackground(boolean isStar, String uid, String boardKey, int position) {
+    public void onUpdateBackground(boolean isStar, String uid, final String boardKey, int position) {
         if (TextUtils.isEmpty(uid) || TextUtils.isEmpty(boardKey)) {
             return;
         }
@@ -39,6 +42,11 @@ public class BackgroundPresenter<V extends BackgroundMvpView> extends BasePresen
                         if (getmMvpView() == null) {
                             return;
                         }
+                        String from = mAccountManager.getCurrentUser().getDisplayName();
+                        String message = " updated background ";
+                        String target = "";
+                        String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
+                        arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
                         getmMvpView().hideProgress();
                         getmMvpView().showMessge("onSuccess");
                     }

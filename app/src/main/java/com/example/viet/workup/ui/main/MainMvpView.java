@@ -19,7 +19,7 @@ public interface MainMvpView extends MvpView {
     void showUnstarBoardReceived(Board board);
 
     void showOtherBoardReceived(Board board);
-
+    void removeOtherBoard(String boardUid,String otherBoardKey);
     void showUnstarBoardOptionMenu(View view, int position);
 
     void showStarBoardOptionMene(View view, int position);

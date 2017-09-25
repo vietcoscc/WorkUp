@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Board;
@@ -29,14 +28,16 @@ import butterknife.ButterKnife;
 
 public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Board> mArrBoard;
+    private ArrayList<String> marrBoardKey;
     private Context context;
     private boolean type;
     private Listener.OnItemClickListenter mOnItemClickListenter;
     private Listener.OnItemLongClickListener mOnItemLongClickListener;
     Field field[] = R.raw.class.getFields();
 
-    public MyboardRecyclerViewAdapter(ArrayList<Board> arrBoard, boolean type) {
+    public MyboardRecyclerViewAdapter(ArrayList<Board> arrBoard, ArrayList<String> arrBoardKey, boolean type) {
         this.mArrBoard = arrBoard;
+        this.marrBoardKey = arrBoardKey;
         this.type = type;
     }
 
@@ -100,7 +101,8 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             try {
 //                InputStream inputStream = context.getResources().openRawResource();
-                Glide.with(context).load(field[board.getImageUrl()].getInt(null))
+                Picasso.with(context).load(field[board.getImageUrl()].getInt(null))
+                        .resize(150, 100)
                         .centerCrop()
                         .placeholder(android.R.drawable.screen_background_light)
                         .error(android.R.drawable.screen_background_dark)
@@ -122,13 +124,17 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void addItem(Board board) {
+        marrBoardKey.add(board.getKey());
         mArrBoard.add(board);
-        notifyItemInserted(mArrBoard.size());
+        notifyItemInserted(mArrBoard.size() - 1);
     }
 
     public void removeItem(int position) {
-        mArrBoard.remove(position);
-        notifyItemRemoved(position);
+        if (position > -1 && position < marrBoardKey.size()) {
+            marrBoardKey.remove(position);
+            mArrBoard.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     public void setmOnItemClickListenter(Listener.OnItemClickListenter mOnItemClickListenter) {
