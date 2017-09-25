@@ -27,6 +27,7 @@ import com.example.viet.workup.ui.board.BoardActivity;
 import com.example.viet.workup.ui.introduced.IntroducedActivity;
 import com.example.viet.workup.ui.main.board.BoardCreatingDialog;
 import com.example.viet.workup.ui.main.menu.BoardOptionMenu;
+import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -88,6 +89,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         mPresenter.onReceiveData();
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
+        ApplicationUtils.setInApp(true);
     }
 
     private void initViews() {
@@ -161,9 +163,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
         }
         setSupportActionBar(toolbar);
         Uri photoUrl = mAccountManager.getCurrentUser().getPhotoUrl();
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         if (photoUrl == null || photoUrl.toString().isEmpty()) {
-            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+            getSupportActionBar().setIcon(R.drawable.man);
         } else {
             getDrawableObservable(photoUrl.toString())
                     .subscribeOn(Schedulers.io())
@@ -230,6 +231,21 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     }
 
     @Override
+    public void deleteStarBoardReceived(String board) {
+        mStarBoardAdapter.removeItem(mArrStarBoardKey.indexOf(board));
+    }
+
+    @Override
+    public void deleteUnstarBoardReceived(String board) {
+        mUnstarBoardAdapter.removeItem(mArrUnstarBoardKey.indexOf(board));
+    }
+
+    @Override
+    public void deleteOtherBoardReceived(String board) {
+        mOtherBoardAdapter.removeItem(mArrOtherBoard.indexOf(board));
+    }
+
+    @Override
     public void removeOtherBoard(String boardUid, String otherBoardKey) {
         mOtherBoardAdapter.removeItem(mArrOtherBoardKey.indexOf(otherBoardKey));
     }
@@ -264,7 +280,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
                     Drawable drawable = new BitmapDrawable(inputStream);
                     return drawable;
                 } catch (Exception e) {
-                    Drawable drawable = getResources().getDrawable(android.R.drawable.screen_background_light);
+                    Drawable drawable = getResources().getDrawable(R.drawable.man);
                     return drawable;
                 }
 

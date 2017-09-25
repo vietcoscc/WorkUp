@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,14 +54,26 @@ public class LabelRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
         public LabelViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
-            ViewCompat.setNestedScrollingEnabled(itemView,false);
+            ButterKnife.bind(this, itemView);
+            ViewCompat.setNestedScrollingEnabled(itemView, false);
         }
 
         public void setData(Label label) {
-            int color = Color.parseColor(label.getColor());
-            tvLabel.setBackgroundColor(color);
-            tvLabel.setText(label.getText().toString());
+            if (label == null) {
+                return;
+            }
+            if (TextUtils.isEmpty(label.getColor())) {
+                tvLabel.setBackgroundColor(Color.WHITE);
+            } else {
+                int color = Color.parseColor(label.getColor());
+                tvLabel.setBackgroundColor(color);
+            }
+
+            if (TextUtils.isEmpty(label.getText())) {
+                tvLabel.setText(" ");
+            } else {
+                tvLabel.setText(label.getText());
+            }
         }
     }
 

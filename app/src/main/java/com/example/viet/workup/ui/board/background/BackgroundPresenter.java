@@ -46,7 +46,7 @@ public class BackgroundPresenter<V extends BackgroundMvpView> extends BasePresen
                         String message = " updated background ";
                         String target = "";
                         String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                        arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                        arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp, false));
                         getmMvpView().hideProgress();
                         getmMvpView().showMessge("onSuccess");
                     }

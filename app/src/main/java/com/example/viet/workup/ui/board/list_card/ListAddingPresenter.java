@@ -51,7 +51,7 @@ public class ListAddingPresenter<V extends ListAddingMvpView> extends BasePresen
                 String message = " added list ";
                 String target = title;
                 String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
                 if (getmMvpView() != null) {
                     getmMvpView().hideProgress();
                 }

@@ -59,9 +59,13 @@ public class BoardActivityAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         public void setData(BoardUserActivity boardActivity) {
+
             String from = boardActivity.getFrom();
             String message = boardActivity.getMessage();
             String target = boardActivity.getTarget();
+            if (from == null || from == null || target == null || from.isEmpty() || message.isEmpty() || target.isEmpty()) {
+                return;
+            }
             SpannableString spannableString = new SpannableString(from + " " + message + " " + target);
             spannableString.setSpan(new ForegroundColorSpan(Color.RED), 0,
                     from.length(),
@@ -81,6 +85,9 @@ public class BoardActivityAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void addItem(BoardUserActivity boardUserActivity) {
+        if (boardUserActivity.getFrom() == null || boardUserActivity.getTarget() == null || boardUserActivity.getMessage() == null) {
+            return;
+        }
         mArrBoardActivity.add(0, boardUserActivity);
         notifyItemInserted(0);
     }

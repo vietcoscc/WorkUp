@@ -18,6 +18,8 @@ public interface BoardMvpView extends MvpView {
 
     void showBackground(int id);
 
+    void showTitle(String title);
+
     void finishAcitivity();
 
     void showAddingListDialog();

@@ -1,8 +1,11 @@
 package com.example.viet.workup.utils;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -13,10 +16,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.viet.workup.R;
+import com.example.viet.workup.model.BoardUserActivity;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 
 /**
@@ -25,6 +31,7 @@ import java.util.List;
 
 public class ApplicationUtils {
     private static Field field[] = R.raw.class.getFields();
+    private static boolean inApp = false;
 
     public static boolean isNetworkConnectionAvailable(Context context) {
         ConnectivityManager connectivityManager
@@ -75,5 +82,26 @@ public class ApplicationUtils {
 
             }
         };
+    }
+
+
+    public static void showNotification(Context context, BoardUserActivity boardUserActivity) {
+        Notification.Builder builder = new Notification.Builder(context);
+        builder.setContentTitle(boardUserActivity.getTimeStamp());
+        builder.setContentText(boardUserActivity.getFrom() + "" + boardUserActivity.getMessage() + "" + boardUserActivity.getTarget());
+        BitmapDrawable drawable = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_board);
+        builder.setLargeIcon(drawable.getBitmap());
+        builder.setSmallIcon(R.drawable.ic_board);
+        Notification notification = builder.build();
+        NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        manager.notify((int) System.currentTimeMillis(), notification);
+    }
+
+    public static boolean isInApp() {
+        return inApp;
+    }
+
+    public static void setInApp(boolean inApp) {
+        ApplicationUtils.inApp = inApp;
     }
 }

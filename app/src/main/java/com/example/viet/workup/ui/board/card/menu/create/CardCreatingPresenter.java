@@ -51,14 +51,14 @@ public class CardCreatingPresenter<V extends CardCreatingMvpView> extends BasePr
             return;
         }
         getmMvpView().showProgress();
-        Label label = new Label("#e3952a", mAccountManager.getUserInfo().getDisplayName());
+        Label label = new Label("#e3952a", mAccountManager.getCurrentUser().getDisplayName());
         DueDate dueDate = new DueDate(CalendarUtils.getDay(), CalendarUtils.getMonth(), CalendarUtils.getYear());
         UserInfo userInfo = mAccountManager.getUserInfo();
         ArrayList<Label> arrLabel = new ArrayList<>();
         arrLabel.add(label);
         ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
         arrUserInfo.add(userInfo);
-        final Card card = new Card("", title, 0, "", dueDate, arrLabel,arrUserInfo, !description.isEmpty(), description);
+        final Card card = new Card("", title, 0, "", dueDate, arrLabel, arrUserInfo, !description.isEmpty(), description);
         arrCardRef(boardKey, cardListKey).push().setValue(card).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -66,7 +66,7 @@ public class CardCreatingPresenter<V extends CardCreatingMvpView> extends BasePr
                 String message = " create card  ";
                 String target = card.getTitle();
                 String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp, false));
                 if (getmMvpView() != null) {
                     getmMvpView().hideProgress();
                     getmMvpView().dismissCardCreatingDialog();

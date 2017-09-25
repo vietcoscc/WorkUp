@@ -69,7 +69,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                        if (getmMvpView() != null) {
+                            getmMvpView().deleteStarBoardReceived(dataSnapshot.getKey());
+                        }
                     }
 
                     @Override
@@ -101,7 +103,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                        if (getmMvpView() != null) {
+                            getmMvpView().deleteUnstarBoardReceived(dataSnapshot.getKey());
+                        }
                     }
 
                     @Override
@@ -119,6 +123,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Board board = dataSnapshot.getValue(Board.class);
                 if (board == null) {
+                    if (getmMvpView() != null) {
+                        getmMvpView().deleteOtherBoardReceived(dataSnapshot.getKey());
+                    }
                     return;
                 }
                 board.setKey(dataSnapshot.getKey());

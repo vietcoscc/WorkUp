@@ -1,18 +1,14 @@
 package com.example.viet.workup.service;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.example.viet.workup.R;
 import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.BoardUserActivity;
 import com.example.viet.workup.model.image.OtherBoard;
-import com.example.viet.workup.utils.CalendarUtils;
+import com.example.viet.workup.utils.ApplicationUtils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +25,6 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.unstarBoardRef
 
 public class NotificationService extends Service {
     public static final String TAG = "NotificationService";
-    boolean enable;
 
     @Nullable
     @Override
@@ -38,20 +33,30 @@ public class NotificationService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String uid = AccountManager.getsInstance().getUserInfo().getUid();
         final ChildEventListener activity = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (!enable) {
+                if (!dataSnapshot.exists()) {
+                    return;
+                }
+                if (ApplicationUtils.isInApp()) {
                     return;
                 }
                 BoardUserActivity boardUserActivity = dataSnapshot.getValue(BoardUserActivity.class);
-                String from = boardUserActivity.getFrom();
-                String message = boardUserActivity.getMessage();
-                String target = boardUserActivity.getTarget();
-                String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                showNotification(from + message + target, timeStamp);
+                if (boardUserActivity.isNotified()) {
+                    return;
+                }
+
+                ApplicationUtils.showNotification(NotificationService.this, boardUserActivity);
+                dataSnapshot.getRef().child("notified").setValue(true);
             }
 
             @Override
@@ -77,6 +82,9 @@ public class NotificationService extends Service {
         final ChildEventListener board = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (!dataSnapshot.exists()) {
+                    return;
+                }
                 arrActivityRef(dataSnapshot.getKey()).limitToLast(1).addChildEventListener(activity);
             }
 
@@ -133,7 +141,7 @@ public class NotificationService extends Service {
         otherBoardRef(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                enable = true;
+
             }
 
             @Override
@@ -144,15 +152,5 @@ public class NotificationService extends Service {
         return START_STICKY;
     }
 
-    private void showNotification(String title, String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle(title);
-        builder.setContentText(content);
-        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_board);
-        builder.setLargeIcon(drawable.getBitmap());
-        builder.setSmallIcon(R.drawable.ic_board);
-        Notification notification = builder.build();
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify((int) System.currentTimeMillis(), notification);
-    }
+
 }

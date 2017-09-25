@@ -1,5 +1,6 @@
 package com.example.viet.workup.ui.board;
 
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -119,6 +120,7 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     private void receiveData() {
 
         try {
+            mPresenter.onReceiveTitle(mUidBoard, mBoardKey, isStar);
             mPresenter.onReceiveData(mBoardKey);
             mBoardActivityAdapter.clearItem();
             mPresenter.onReceiveBackground(mUidBoard, mBoardKey, isStar);
@@ -190,11 +192,24 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
         int id = item.getItemId();
         if (id == R.id.item_show) {
             drawerLayout.openDrawer(Gravity.RIGHT, true);
+        } else if (id == R.id.item_delete) {
+            ApplicationUtils.buildConfirmDialog(this, "Are you sure want to delete",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (AccountManager.getsInstance().getCurrentUser().getUid().equals(mUidBoard)) {
+                                mPresenter.onDeleteBoard(mUidBoard, mBoardKey, isStar);
+                            } else {
+                                Toast.makeText(BoardActivity.this, "Member can not delete board", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void initToolbar() {
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
     }
 
@@ -220,9 +235,14 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     }
 
     @Override
+    public void showTitle(String title) {
+        toolbar.setTitle(title);
+    }
+
+    @Override
     public void finishAcitivity() {
-        Toast.makeText(this, "You have been kicked", Toast.LENGTH_SHORT).show();
-        finishAcitivity();
+        Toast.makeText(this, "No board data !", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

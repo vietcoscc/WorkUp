@@ -48,6 +48,9 @@ public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePr
         FireBaseDatabaseUtils.accountRef().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                if(!dataSnapshot.exists()){
+                    return;
+                }
                 new Thread() {
                     @Override
                     public void run() {
@@ -143,7 +146,7 @@ public class MemberAddingPresenter<V extends MemberAddingMvpView> extends BasePr
                                 String message = " added member : ";
                                 String target = userInfo.getDisplayName();
                                 String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                                arrActivityRef(boardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
                                 if (getmMvpView() != null) {
                                     getmMvpView().hideProgress();
                                     getmMvpView().showMessge("onSuccess");

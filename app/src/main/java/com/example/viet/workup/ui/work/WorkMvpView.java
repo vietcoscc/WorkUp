@@ -39,4 +39,5 @@ public interface WorkMvpView extends MvpView {
     void resetTextComment();
 
     void finishActivity();
+
 }

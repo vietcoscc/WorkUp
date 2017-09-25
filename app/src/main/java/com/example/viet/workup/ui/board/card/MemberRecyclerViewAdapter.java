@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.UserInfo;
@@ -67,9 +68,9 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         public void setData(UserInfo userInfo) {
-            if (userInfo.getPhotoUrl() == null || userInfo.getPhotoUrl().isEmpty()) {
+            if (userInfo.getPhotoUrl() == null || userInfo.getPhotoUrl().isEmpty()||userInfo.getPhotoUrl().equals("null")) {
                 Picasso.with(mContext)
-                        .load(R.mipmap.ic_launcher_round)
+                        .load(R.drawable.man)
                         .placeholder(android.R.drawable.screen_background_light)
                         .error(android.R.drawable.screen_background_dark)
                         .into(ivMember);

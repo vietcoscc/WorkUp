@@ -57,7 +57,7 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
         String message = " removed card  ";
         String target = title;
         String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-        arrActivityRef(cardKey.split("\\+")[1]).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+        arrActivityRef(cardKey.split("\\+")[1]).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
         if (getmMvpView() != null) {
             getmMvpView().finishActivity();
         }

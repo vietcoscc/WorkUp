@@ -145,7 +145,7 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                                     String message = " removed member : ";
                                     String target = arrUserInfo.get(getPosition()).getDisplayName();
                                     String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
                                     checkBox.setChecked(false);
                                 }
                             });
@@ -162,7 +162,7 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                                     String message = " added member : ";
                                     String target = arrUserInfo.get(getPosition()).getDisplayName();
                                     String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp));
+                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
                                     checkBox.setChecked(true);
                                 }
                             });

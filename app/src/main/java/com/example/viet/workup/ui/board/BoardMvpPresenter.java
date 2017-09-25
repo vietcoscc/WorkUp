@@ -7,6 +7,8 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface BoardMvpPresenter<V extends BoardMvpView> extends MvpPresenter<V> {
+    void onReceiveTitle(String uid, String boardKey, boolean isStar);
+
     void onReceiveData(String key);
 
     void onReceiveActivity(String key);
@@ -14,4 +16,6 @@ public interface BoardMvpPresenter<V extends BoardMvpView> extends MvpPresenter<
     void onReceiveMember(String key);
 
     void onReceiveBackground(String uid, String boardKey, boolean isStar);
+
+    void onDeleteBoard(String uid, String boardKey, boolean isStar);
 }

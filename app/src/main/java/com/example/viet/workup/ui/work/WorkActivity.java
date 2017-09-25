@@ -346,7 +346,6 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
 
     @Override
     public void finishActivity() {
-
         Toast.makeText(this, "This card has been removed", Toast.LENGTH_SHORT).show();
         finish();
     }

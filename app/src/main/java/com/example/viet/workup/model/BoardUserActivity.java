@@ -9,15 +9,25 @@ public class BoardUserActivity {
     String message;
     String target;
     String timeStamp;
+    boolean isNotified;
 
     public BoardUserActivity() {
     }
 
-    public BoardUserActivity(String from, String message, String target, String timeStamp) {
+    public BoardUserActivity(String from, String message, String target, String timeStamp, boolean isNotified) {
         this.from = from;
         this.message = message;
         this.target = target;
         this.timeStamp = timeStamp;
+        this.isNotified = isNotified;
+    }
+
+    public boolean isNotified() {
+        return isNotified;
+    }
+
+    public void setNotified(boolean notified) {
+        isNotified = notified;
     }
 
     public String getFrom() {

@@ -23,7 +23,6 @@
             android:theme="@style/LoginTheme" />
         <activity
             android:name=".ui.introduced.IntroducedActivity"
-            android:noHistory="true"
             android:theme="@style/IntroducedTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

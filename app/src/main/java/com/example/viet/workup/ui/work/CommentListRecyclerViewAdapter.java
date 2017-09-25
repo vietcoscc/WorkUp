@@ -62,7 +62,7 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         public void setData(Comment comment) {
             if (comment.getUserInfo().getPhotoUrl().isEmpty()) {
-                Picasso.with(mContext).load(R.mipmap.ic_launcher_round)
+                Picasso.with(mContext).load(R.drawable.man)
                         .placeholder(android.R.drawable.screen_background_light)
                         .error(android.R.drawable.screen_background_dark)
                         .into(ivAvatar);
