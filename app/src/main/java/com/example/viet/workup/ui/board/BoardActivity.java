@@ -59,8 +59,6 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     FloatingActionButton fabAddList;
     @BindView(R.id.fabAddMember)
     FloatingActionButton fabAddMember;
-    @BindView(R.id.fabViewMember)
-    FloatingActionButton fabViewMember;
     @BindView(R.id.fabBackground)
     FloatingActionButton fabBackground;
     @BindView(R.id.fabMenu)
@@ -139,14 +137,13 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
         recyclerViewActivity.setAdapter(mBoardActivityAdapter);
         fabAddList.setOnClickListener(this);
         fabAddMember.setOnClickListener(this);
-        fabViewMember.setOnClickListener(this);
         fabBackground.setOnClickListener(this);
         mBoardViewPagerAdapter = new BoardViewPagerAdapter(getSupportFragmentManager(), mBoardKey, mArrCardList, mArrCardListKey);
         viewPager.setParallaxEnabled(true);
         viewPager.setPadding(50, 0, 50, 0);
         viewPager.setClipToPadding(false);
         viewPager.setAdapter(mBoardViewPagerAdapter);
-        viewPager.set_max_pages(30);
+        viewPager.set_max_pages(20);
         viewPager.setOffscreenPageLimit(0);
         viewPager.setBackgroundAsset(ApplicationUtils.rawId(0));
         if (TextUtils.isEmpty(mUidBoard) || TextUtils.isEmpty(mBoardKey)) {
@@ -163,6 +160,7 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                mPresenter.removeActivityEvent(mBoardKey);
                 mBoardActivityAdapter.clearItem();
             }
 
@@ -204,13 +202,20 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
                             }
                         }
                     }).show();
+        } else if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.item_member) {
+            CardMemberDialogFragment dialogFragment = CardMemberDialogFragment.newInstance(mBoardKey, mUidBoard, isStar);
+            dialogFragment.show(getSupportFragmentManager(), "");
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void initToolbar() {
+
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -263,6 +268,10 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.fabAddList) {
+            if (mArrCardList.size() >= 20) {
+                Toast.makeText(this, "Cant add more list", Toast.LENGTH_SHORT).show();
+                return;
+            }
             ListAddingDialogFragment addingDialogFragment = ListAddingDialogFragment.newInstance(mBoardKey);
             addingDialogFragment.show(getSupportFragmentManager(), "");
         } else if (view.getId() == R.id.fabAddMember) {
@@ -272,9 +281,6 @@ public class BoardActivity extends BaseActivity implements BoardMvpView, View.On
             } else {
                 Toast.makeText(this, "Cant add member", Toast.LENGTH_SHORT).show();
             }
-        } else if (view.getId() == R.id.fabViewMember) {
-            CardMemberDialogFragment dialogFragment = CardMemberDialogFragment.newInstance(mBoardKey, mUidBoard, isStar);
-            dialogFragment.show(getSupportFragmentManager(), "");
         } else if (view.getId() == R.id.fabBackground) {
             BackgroundDialogFragment backgroundDialogFragment = BackgroundDialogFragment.newInstance(mUidBoard, mBoardKey, isStar);
             backgroundDialogFragment.show(getSupportFragmentManager(), "");

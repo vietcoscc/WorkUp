@@ -20,8 +20,8 @@ import javax.inject.Inject;
 
 public class BoardOptionMenu extends BasePopupMenu implements BoardOptionMvpView, MenuItem.OnMenuItemClickListener {
 
-    private MenuItem itemSignStar;
-    private MenuItem itemUnSignStar;
+    private MenuItem mItemSignStar;
+    private MenuItem mItemUnSignStar;
     private Board mBoard;
     private ArrayList<Board> mArrBoard;
     private int mPosition;
@@ -43,14 +43,14 @@ public class BoardOptionMenu extends BasePopupMenu implements BoardOptionMvpView
     }
 
     private void initViews() {
-        itemSignStar = getMenu().findItem(R.id.action_star);
-        itemUnSignStar = getMenu().findItem(R.id.action_unstar);
-        itemUnSignStar.setOnMenuItemClickListener(this);
-        itemSignStar.setOnMenuItemClickListener(this);
+        mItemSignStar = getMenu().findItem(R.id.action_star);
+        mItemUnSignStar = getMenu().findItem(R.id.action_unstar);
+        mItemUnSignStar.setOnMenuItemClickListener(this);
+        mItemSignStar.setOnMenuItemClickListener(this);
         if (mBoard.isStar()) {
-            itemSignStar.setVisible(false);
+            mItemSignStar.setVisible(false);
         } else {
-            itemUnSignStar.setVisible(false);
+            mItemUnSignStar.setVisible(false);
         }
     }
 

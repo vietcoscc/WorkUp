@@ -7,7 +7,9 @@ import com.example.viet.workup.base.MvpPresenter;
  */
 
 public interface WorkMvpPresenter<V extends WorkMvpView> extends MvpPresenter<V> {
-    void onDeleteCard(String cardKey,String title);
+    void onDeleteLabel(String cardKey, String labelKey);
+
+    void onDeleteCard(String cardKey, String title);
 
     void onReceiveCoverImage(String cardKey);
 

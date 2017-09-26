@@ -7,6 +7,7 @@ import android.graphics.Color;
  */
 
 public class Label {
+    private String key;
     private String color;
     private String text;
 
@@ -16,6 +17,14 @@ public class Label {
     public Label(String color, String text) {
         this.color = color;
         this.text = text;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getColor() {

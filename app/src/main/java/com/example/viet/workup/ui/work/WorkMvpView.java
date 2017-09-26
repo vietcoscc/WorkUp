@@ -16,6 +16,8 @@ public interface WorkMvpView extends MvpView {
 
     void showLabel(Label label);
 
+    void deleteLabel(String labelKey);
+
     void showMemeber(UserInfo userInfo);
 
     void showWordList(WorkList workList);

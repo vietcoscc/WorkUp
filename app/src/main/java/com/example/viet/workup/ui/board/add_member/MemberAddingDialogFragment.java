@@ -38,8 +38,8 @@ public class MemberAddingDialogFragment extends BaseDialogFragment implements Me
     @BindView(R.id.tvEmail)
     AutoCompleteTextView tvEmail;
     private ArrayAdapter<String> mAdapter;
-    private ArrayList<String> arrUser = new ArrayList<>();
-    private ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
+    private ArrayList<String> mArrUser = new ArrayList<>();
+    private ArrayList<UserInfo> mArrUserInfo = new ArrayList<>();
     private String mBoardKey;
     private boolean isStar;
     private String mBoardUid;
@@ -65,7 +65,7 @@ public class MemberAddingDialogFragment extends BaseDialogFragment implements Me
         }
         getmActivityComponent().inject(this);
         mPresenter.onAttach(this);
-        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, arrUser);
+        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, mArrUser);
 
     }
 
@@ -80,7 +80,7 @@ public class MemberAddingDialogFragment extends BaseDialogFragment implements Me
                 if (isOnProgress()) {
                     return;
                 }
-                mPresenter.onAddMember(mBoardUid, mBoardKey, isStar, arrUserInfo, tvEmail.getText().toString());
+                mPresenter.onAddMember(mBoardUid, mBoardKey, isStar, mArrUserInfo, tvEmail.getText().toString());
             }
         });
         return mDialog;
@@ -110,7 +110,7 @@ public class MemberAddingDialogFragment extends BaseDialogFragment implements Me
     }
 
     public void addUser(UserInfo user) {
-        arrUserInfo.add(user);
+        mArrUserInfo.add(user);
     }
 
     @Override

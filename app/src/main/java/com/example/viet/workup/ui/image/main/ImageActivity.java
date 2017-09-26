@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.viet.workup.MyApplication;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseActivity;
 import com.example.viet.workup.model.image.Category;
 import com.example.viet.workup.ui.image.item.ItemActivity;
+import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.util.ArrayList;
 
@@ -49,6 +51,10 @@ public class ImageActivity extends BaseActivity implements ImageMvpView {
         mAdapter.setmOnItemClickListener(new ImageAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
+                if (!ApplicationUtils.isNetworkConnectionAvailable(ImageActivity.this)) {
+                    Toast.makeText(ImageActivity.this, "Network is not available !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(ImageActivity.this, ItemActivity.class);
                 intent.putExtra(CATEGORY_ID, mArrCategory.get(position).getcId());
                 startActivity(intent);
@@ -59,7 +65,7 @@ public class ImageActivity extends BaseActivity implements ImageMvpView {
 
     private void initPresenter() {
 //        MyApplication application = (MyApplication) getApplication();
-//        application.getmActivityComponent().inject(this);
+//        application.getActivityComponent().inject(this);
         getmActivityComponent().inject(this);
         mMainPresenter.onAttach(this);
     }

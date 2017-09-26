@@ -63,7 +63,7 @@ public class BoardActivityAdapter extends RecyclerView.Adapter<RecyclerView.View
             String from = boardActivity.getFrom();
             String message = boardActivity.getMessage();
             String target = boardActivity.getTarget();
-            if (from == null || from == null || target == null || from.isEmpty() || message.isEmpty() || target.isEmpty()) {
+            if (from == null || from == null || from.isEmpty() || message.isEmpty()) {
                 return;
             }
             SpannableString spannableString = new SpannableString(from + " " + message + " " + target);
@@ -76,7 +76,7 @@ public class BoardActivityAdapter extends RecyclerView.Adapter<RecyclerView.View
             spannableString.setSpan(new ForegroundColorSpan(Color.RED), from.length() + message.length(),
                     spannableString.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new UnderlineSpan(), from.length() + message.length(),
+            spannableString.setSpan(new UnderlineSpan(), from.length() + message.length()+2,
                     spannableString.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             tvMessage.setText(spannableString);

@@ -3,6 +3,7 @@ package com.example.viet.workup.base;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -26,23 +27,31 @@ public class BasePopupMenu extends PopupMenu implements MvpView {
         mProgressDialog.setCancelable(false);
         AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
         MyApplication myApplication = (MyApplication) appCompatActivity.getApplication();
-        mActivityComponent = myApplication.getmActivityComponent();
+        mActivityComponent = myApplication.getActivityComponent();
         mProgressDialog.setCancelable(false);
     }
 
     @Override
     public void showProgress() {
+        if (mProgressDialog == null) {
+            return;
+        }
         mProgressDialog.show();
     }
 
     @Override
     public void hideProgress() {
+        if (mProgressDialog == null) {
+            return;
+        }
         mProgressDialog.dismiss();
     }
 
     @Override
     public void showMessge(String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(message)) {
+            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

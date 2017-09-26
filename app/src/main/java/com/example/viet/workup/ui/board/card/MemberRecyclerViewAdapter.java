@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.UserInfo;
@@ -31,11 +30,11 @@ import io.reactivex.Observable;
 
 public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String TAG = "MemberRecyclerViewAdapter";
-    private ArrayList<UserInfo> arrUserInfo;
+    private ArrayList<UserInfo> mArrUserInfo;
     private Context mContext;
 
     public MemberRecyclerViewAdapter(ArrayList<UserInfo> arrUserInfo) {
-        this.arrUserInfo = arrUserInfo;
+        this.mArrUserInfo = arrUserInfo;
     }
 
     @Override
@@ -48,13 +47,13 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MemberViewHolder memberViewHolder = (MemberViewHolder) holder;
-        UserInfo userInfo = arrUserInfo.get(position);
+        UserInfo userInfo = mArrUserInfo.get(position);
         memberViewHolder.setData(userInfo);
     }
 
     @Override
     public int getItemCount() {
-        return arrUserInfo.size();
+        return mArrUserInfo.size();
     }
 
     class MemberViewHolder extends RecyclerView.ViewHolder {
@@ -95,13 +94,13 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public void addItem(UserInfo userInfo) {
-        arrUserInfo.add(userInfo);
-        notifyItemInserted(arrUserInfo.size() - 1);
+        mArrUserInfo.add(userInfo);
+        notifyItemInserted(mArrUserInfo.size() - 1);
     }
 
     public void removeItem(int position) {
-        if (position < arrUserInfo.size()) {
-            arrUserInfo.remove(position);
+        if (position < mArrUserInfo.size()) {
+            mArrUserInfo.remove(position);
             notifyItemRemoved(position);
         }
     }

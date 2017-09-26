@@ -61,7 +61,7 @@ public class BoardCreatingDialog extends BaseDialogFragment implements BoardCrea
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth);
-        builder.setMessage("Create mDialog");
+        builder.setMessage("Create board");
         builder.setNegativeButton("Cancel", null);
         builder.setPositiveButton("Create", null);
         mDialog = builder.create();

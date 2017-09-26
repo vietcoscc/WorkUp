@@ -11,7 +11,7 @@ public class StorageManager {
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private static StorageManager mInstance;
 
-    public static StorageManager newInstance() {
+    public static StorageManager getInstance() {
         if (mInstance == null) {
             mInstance = new StorageManager();
             return mInstance;

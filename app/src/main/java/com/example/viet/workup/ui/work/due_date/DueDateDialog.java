@@ -35,7 +35,7 @@ public class DueDateDialog extends DatePickerDialog implements DueDateMvpView {
         super.onCreate(savedInstanceState);
         AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
         MyApplication myApplication = (MyApplication) appCompatActivity.getApplication();
-        ActivityComponent component = myApplication.getmActivityComponent();
+        ActivityComponent component = myApplication.getActivityComponent();
         component.inject(this);
 
         mPresenter.onAttach(this);

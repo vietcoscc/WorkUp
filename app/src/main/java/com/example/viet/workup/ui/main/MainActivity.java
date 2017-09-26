@@ -187,9 +187,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_setting) {
-
-        } else if (item.getItemId() == R.id.action_logout) {
+        if (item.getItemId() == R.id.action_logout) {
             mPresenter.onOptionMenuActionLogoutClick();
         }
         return super.onOptionsItemSelected(item);

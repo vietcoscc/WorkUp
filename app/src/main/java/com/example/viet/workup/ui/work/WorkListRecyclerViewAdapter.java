@@ -42,14 +42,14 @@ public class WorkListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public static final int TYPE_HEADER = 0;
     private static final String TAG = "WorkListRecyclerViewAdapter";
 
-    private ArrayList<WorkList> arrWorkList;
-    private ArrayList<String> arrWorkListKey;
+    private ArrayList<WorkList> mArrWorkList;
+    private ArrayList<String> mArrWorkListKey;
     private Context mContext;
     private String mCardKey;
 
     public WorkListRecyclerViewAdapter(ArrayList<WorkList> arrWorkList, ArrayList<String> arrWorkListKey, String cardKey) {
-        this.arrWorkList = arrWorkList;
-        this.arrWorkListKey = arrWorkListKey;
+        this.mArrWorkList = arrWorkList;
+        this.mArrWorkListKey = arrWorkListKey;
         this.mCardKey = cardKey;
     }
 
@@ -64,13 +64,13 @@ public class WorkListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
-        viewHolder.setdata(arrWorkList.get(position));
+        viewHolder.setdata(mArrWorkList.get(position));
     }
 
 
     @Override
     public int getItemCount() {
-        return arrWorkList.size();
+        return mArrWorkList.size();
     }
 
     class HeaderViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
@@ -199,12 +199,16 @@ public class WorkListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                arrWorkListRef(mCardKey).child(arrWorkListKey.get(getPosition())).setValue(null);
-                                arrTaskListRef(mCardKey, arrWorkListKey.get(getPosition())).setValue(null);
+                                arrWorkListRef(mCardKey).child(mArrWorkListKey.get(getPosition())).setValue(null);
+                                arrTaskListRef(mCardKey, mArrWorkListKey.get(getPosition())).setValue(null);
                             }
                         });
                 dialog.show();
             } else if (id == R.id.ivCheck) {
+                if(arrTask.size()>30){
+                    Toast.makeText(mContext, "Cant add more task ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (DataUtils.isWorkListNameValid(edttitle.getText().toString())) {
                     ivDelete.setVisibility(View.VISIBLE);
                     tvHeader.setVisibility(View.VISIBLE);
@@ -212,7 +216,7 @@ public class WorkListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     edttitle.setVisibility(View.GONE);
                     WorkList workList = new WorkList(edttitle.getText().toString(), 0, null);
 
-                    arrWorkListRef(mCardKey).child(arrWorkListKey.get(getPosition())).setValue(workList);
+                    arrWorkListRef(mCardKey).child(mArrWorkListKey.get(getPosition())).setValue(workList);
                     InputMethodManager im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(edttitle.getWindowToken(), 0);
                     edttitle.setText("");
@@ -225,23 +229,23 @@ public class WorkListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
     public void addItem(WorkList workList) {
-        arrWorkListKey.add(workList.getKey());
-        arrWorkList.add(workList);
-        notifyItemInserted(arrWorkList.size() - 1);
+        mArrWorkListKey.add(workList.getKey());
+        mArrWorkList.add(workList);
+        notifyItemInserted(mArrWorkList.size() - 1);
     }
 
     public void removeItem(int postition) {
-        if (-1 < postition && postition < arrWorkList.size()) {
-            arrWorkListKey.remove(postition);
-            arrWorkList.remove(postition);
+        if (-1 < postition && postition < mArrWorkList.size()) {
+            mArrWorkListKey.remove(postition);
+            mArrWorkList.remove(postition);
             notifyItemRemoved(postition);
         }
     }
 
     public void changeItem(WorkList workList, int position) {
-        if (-1 < position && position < arrWorkList.size()) {
-            arrWorkListKey.set(position, workList.getKey());
-            arrWorkList.set(position, workList);
+        if (-1 < position && position < mArrWorkList.size()) {
+            mArrWorkListKey.set(position, workList.getKey());
+            mArrWorkList.set(position, workList);
             notifyItemChanged(position);
         }
 

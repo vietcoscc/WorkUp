@@ -50,14 +50,19 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void onDeleteCard(String cardKey,String title) {
+    public void onDeleteLabel(String cardKey, String labelKey) {
+        labelCardRef(cardKey).child(labelKey).removeValue();
+    }
+
+    @Override
+    public void onDeleteCard(String cardKey, String title) {
         cardDataRef(cardKey).removeValue();
         cardRef(cardKey).removeValue();
         String from = mAccountManager.getCurrentUser().getDisplayName();
         String message = " removed card  ";
         String target = title;
         String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-        arrActivityRef(cardKey.split("\\+")[1]).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
+        arrActivityRef(cardKey.split("\\+")[1]).push().setValue(new BoardUserActivity(from, message, target, timeStamp, false));
         if (getmMvpView() != null) {
             getmMvpView().finishActivity();
         }
@@ -168,6 +173,7 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
                     public void run() {
                         super.run();
                         Label label = dataSnapshot.getValue(Label.class);
+                        label.setKey(dataSnapshot.getKey());
                         if (label == null) {
                             return;
                         }
@@ -180,12 +186,13 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                if (getmMvpView() != null) {
+                    getmMvpView().deleteLabel(dataSnapshot.getKey());
+                }
             }
 
             @Override

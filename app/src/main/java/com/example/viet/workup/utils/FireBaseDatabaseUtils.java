@@ -103,7 +103,7 @@ public class FireBaseDatabaseUtils {
     }
 
     public static DatabaseReference labelCardRef(String cardKey) {
-        return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(cardKey.split("\\+")[2]).child(ARR_LABEL);
+        return arrCardRef(cardKey.split("\\+")[0], cardKey.split("\\+")[1]).child(ARR_LABEL).child(cardKey.split("\\+")[2]);
     }
 
     public static DatabaseReference coverImageCardRef(String cardKey) {

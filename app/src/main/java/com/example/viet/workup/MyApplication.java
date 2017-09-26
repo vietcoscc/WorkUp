@@ -47,7 +47,7 @@ public class MyApplication extends Application {
         Fresco.initialize(this, config);
     }
 
-    public ActivityComponent getmActivityComponent() {
+    public ActivityComponent getActivityComponent() {
         return mActivityComponent;
     }
 }

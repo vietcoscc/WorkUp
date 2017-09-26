@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.viet.workup.R;
+import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Label;
 
 import java.util.ArrayList;
@@ -23,11 +24,14 @@ import butterknife.ButterKnife;
  */
 
 public class LabelRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<Label> arrLabel;
+    private ArrayList<Label> mArrLabel;
+    private ArrayList<String> mArrLabelKey;
     private Context mContext;
+    private Listener.OnItemLongClickListener mOnItemLongClickListener;
 
-    public LabelRecyclerViewAdapter(ArrayList<Label> arrLabel) {
-        this.arrLabel = arrLabel;
+    public LabelRecyclerViewAdapter(ArrayList<Label> arrLabel, ArrayList<String> arrLabelKey) {
+        this.mArrLabel = arrLabel;
+        this.mArrLabelKey = arrLabelKey;
     }
 
     @Override
@@ -40,15 +44,15 @@ public class LabelRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         LabelViewHolder labelViewHolder = (LabelViewHolder) holder;
-        labelViewHolder.setData(arrLabel.get(position));
+        labelViewHolder.setData(mArrLabel.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return arrLabel.size();
+        return mArrLabel.size();
     }
 
-    class LabelViewHolder extends RecyclerView.ViewHolder {
+    class LabelViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         @BindView(R.id.tvLabel)
         TextView tvLabel;
 
@@ -56,6 +60,7 @@ public class LabelRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             super(itemView);
             ButterKnife.bind(this, itemView);
             ViewCompat.setNestedScrollingEnabled(itemView, false);
+            itemView.setOnLongClickListener(this);
         }
 
         public void setData(Label label) {
@@ -75,17 +80,32 @@ public class LabelRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 tvLabel.setText(label.getText());
             }
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (mOnItemLongClickListener != null) {
+                mOnItemLongClickListener.onLongClick(view, getPosition());
+            }
+            return false;
+        }
     }
 
     public void addItem(Label label) {
-        arrLabel.add(label);
-        notifyItemInserted(arrLabel.size() - 1);
+        mArrLabelKey.add(label.getKey());
+        mArrLabel.add(label);
+        notifyItemInserted(mArrLabel.size() - 1);
     }
 
     public void removeItem(int position) {
-        if (position < arrLabel.size()) {
-            arrLabel.remove(position);
+        if (position > -1 && position < mArrLabel.size()) {
+            mArrLabelKey.remove(position);
+            mArrLabel.remove(position);
             notifyItemRemoved(position);
         }
+    }
+
+
+    public void setOnItemLongClickListener(Listener.OnItemLongClickListener mOnItemLongClickListener) {
+        this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
 }

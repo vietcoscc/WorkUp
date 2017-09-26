@@ -18,12 +18,16 @@ import com.example.viet.workup.model.Card;
 import com.example.viet.workup.model.DueDate;
 import com.example.viet.workup.model.Label;
 import com.example.viet.workup.model.UserInfo;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.labelCardRef;
 
 /**
  * Created by viet on 12/09/2017.
@@ -34,7 +38,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<String> mArrCardKey;
     private Context mContext;
     private Listener.OnItemClickListenter mOnItemClickListenter;
-    private int lastPosition = -1;
+    private int mLastPosition = -1;
 
     public CardRecyclerViewAdapter(ArrayList<Card> arrCard, ArrayList<String> arrCardKey) {
         arrCard.clear();
@@ -53,12 +57,12 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         CardViewHolder cardViewHolder = (CardViewHolder) holder;
         Card card = mArrCard.get(position);
-        cardViewHolder.setData(card);
+        cardViewHolder.setData(card, position);
 
-        if (position > lastPosition) {
+        if (position > mLastPosition) {
             AlphaAnimation animation = (AlphaAnimation) AnimationUtils.loadAnimation(mContext, android.R.anim.fade_in);
             holder.itemView.startAnimation(animation);
-            lastPosition = position;
+            mLastPosition = position;
         }
     }
 
@@ -95,6 +99,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         LabelRecyclerViewAdapter labelRecyclerViewAdapter;
         MemberRecyclerViewAdapter memberRecyclerViewAdapter;
         ArrayList<Label> arrLabel = new ArrayList<>();
+        ArrayList<String> arrLabelKey = new ArrayList<>();
         ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
 
         public CardViewHolder(View itemView) {
@@ -103,7 +108,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             itemView.setOnClickListener(this);
 
             recyclerViewLabel.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            labelRecyclerViewAdapter = new LabelRecyclerViewAdapter(arrLabel);
+            labelRecyclerViewAdapter = new LabelRecyclerViewAdapter(arrLabel, arrLabelKey);
             recyclerViewLabel.setAdapter(labelRecyclerViewAdapter);
 
             recyclerViewMember.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, true));
@@ -112,13 +117,43 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         }
 
-        void setData(Card card) {
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Label label = dataSnapshot.getValue(Label.class);
+                label.setKey(dataSnapshot.getKey());
+                labelRecyclerViewAdapter.addItem(label);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                labelRecyclerViewAdapter.removeItem(arrLabelKey.indexOf(dataSnapshot.getKey()));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        void setData(Card card, int position) {
+            labelCardRef(mArrCard.get(position).getCardKey()).removeEventListener(childEventListener);
+            labelCardRef(mArrCard.get(position).getCardKey()).addChildEventListener(childEventListener);
             String coverImageUrl = card.getCoverImageUrl();
             String title = card.getTitle();
             int commentCount = card.getCommentCount();
             String checkWork = card.getCheckWork();
             DueDate dueDate = card.getDueDate();
-            ArrayList<Label> labels = card.getArrLabel();
             ArrayList<UserInfo> userInfos = card.getArrUserInfo();
             boolean hasDescription = card.isHasDescription();
             tvTitle.setText(title);
@@ -152,13 +187,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             } else {
                 tvDueDate.setText(dueDate.getDay() + " thg " + dueDate.getMonth() + " nm " + dueDate.getYear());
             }
-            if (labels == null || labels.isEmpty()) {
-                recyclerViewLabel.setVisibility(View.GONE);
-            } else {
-                arrLabel.clear();
-                arrLabel.addAll(labels);
-                labelRecyclerViewAdapter.notifyDataSetChanged();
-            }
+
             if (userInfos == null || userInfos.isEmpty()) {
                 recyclerViewMember.setVisibility(View.GONE);
             } else {
@@ -195,15 +224,19 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void changeItem(Card card, int position) {
-        mArrCard.set(position, card);
-        mArrCardKey.set(position, card.getKey());
-        notifyItemChanged(position);
+        if (position > -1 && position < mArrCard.size()) {
+            mArrCard.set(position, card);
+            mArrCardKey.set(position, card.getKey());
+            notifyItemChanged(position);
+        }
     }
 
     public void removeItem(int position) {
-        mArrCard.remove(position);
-        mArrCardKey.remove(position);
-        notifyItemRemoved(position);
+        if (position > -1 && position < mArrCard.size()) {
+            mArrCard.remove(position);
+            mArrCardKey.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     public void setOnItemClickListenter(Listener.OnItemClickListenter onItemClickListenter) {

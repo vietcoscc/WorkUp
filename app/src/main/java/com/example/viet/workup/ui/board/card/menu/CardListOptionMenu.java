@@ -57,7 +57,7 @@ public class CardListOptionMenu extends BasePopupMenu implements CardListMvpView
             cardCreatingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
         }
 //        if (id == R.id.action_move) {
-//            CardMovingDialog cardMovingDialog = CardMovingDialog.newInstance(mBoardKey, mCardListKey);
+//            CardMovingDialog cardMovingDialog = CardMovingDialog.getInstance(mBoardKey, mCardListKey);
 //            AppCompatActivity appCompatActivity = (AppCompatActivity) mContext;
 //            cardMovingDialog.show(appCompatActivity.getSupportFragmentManager(), "");
 //        }

@@ -13,6 +13,8 @@ public interface BoardMvpPresenter<V extends BoardMvpView> extends MvpPresenter<
 
     void onReceiveActivity(String key);
 
+    void removeActivityEvent(String key);
+
     void onReceiveMember(String key);
 
     void onReceiveBackground(String uid, String boardKey, boolean isStar);

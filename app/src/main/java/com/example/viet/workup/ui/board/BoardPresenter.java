@@ -131,37 +131,44 @@ public class BoardPresenter<V extends BoardMvpView> extends BasePresenter<V> imp
         });
     }
 
+    ChildEventListener activityChildEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            BoardUserActivity boardUserActivity = dataSnapshot.getValue(BoardUserActivity.class);
+            if (getmMvpView() != null) {
+                getmMvpView().showArrActivity(boardUserActivity);
+            }
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     @Override
     public void onReceiveActivity(String key) {
-        arrActivityRef(key).limitToLast(30).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                BoardUserActivity boardUserActivity = dataSnapshot.getValue(BoardUserActivity.class);
-                if (getmMvpView() != null) {
-                    getmMvpView().showArrActivity(boardUserActivity);
-                }
-            }
+        arrActivityRef(key).limitToLast(30).addChildEventListener(activityChildEventListener);
+    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    @Override
+    public void removeActivityEvent(String key) {
+        arrActivityRef(key).limitToLast(30).removeEventListener(activityChildEventListener);
     }
 
     @Override

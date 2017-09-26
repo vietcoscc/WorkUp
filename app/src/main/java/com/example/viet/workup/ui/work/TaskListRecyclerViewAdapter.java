@@ -42,8 +42,8 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public static final int TYPE_TASK = 1;
     public static final int TYPE_ADD_TASK = 2;
 
-    private ArrayList<Task> arrTask;
-    private ArrayList<String> arrTaskKey;
+    private ArrayList<Task> mArrTask;
+    private ArrayList<String> mArrTaskKey;
     private Context mContext;
     private String mCardKey;
     private String mWorkKey;
@@ -51,10 +51,10 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public TaskListRecyclerViewAdapter(ArrayList<Task> arrTask, ArrayList<String> arrTaskKey, String cardKey, String workKey) {
         arrTask.clear();
         arrTaskKey.clear();
-        this.arrTask = arrTask;
+        this.mArrTask = arrTask;
         this.mCardKey = cardKey;
         this.mWorkKey = workKey;
-        this.arrTaskKey = arrTaskKey;
+        this.mArrTaskKey = arrTaskKey;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskViewHolder = (TaskViewHolder) holder;
-            taskViewHolder.setData(arrTask.get(position));
+            taskViewHolder.setData(mArrTask.get(position));
         }
         if (holder instanceof AddTaskViewHolder) {
             AddTaskViewHolder addTaskViewHolder = (AddTaskViewHolder) holder;
@@ -83,12 +83,12 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        return arrTask.size() + 1;
+        return mArrTask.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < arrTask.size()) {
+        if (position < mArrTask.size()) {
             return TYPE_TASK;
         } else {
             return TYPE_ADD_TASK;
@@ -139,7 +139,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             } else if (id == R.id.ivCheck) {
                 String title = edttitle.getText().toString().trim();
                 if (DataUtils.isWorkListNameValid(title)) {
-                    taskRef(mCardKey, mWorkKey, arrTask.get(getPosition()).getKey()).child("task").setValue(title);
+                    taskRef(mCardKey, mWorkKey, mArrTask.get(getPosition()).getKey()).child("task").setValue(title);
                     edttitle.setVisibility(View.GONE);
                     edttitle.setText(tvTask.getText());
                     tvTask.setVisibility(View.VISIBLE);
@@ -150,7 +150,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
 
             } else {
-                taskHasDoneRef(mCardKey, mWorkKey, arrTask.get(getPosition()).getKey()).setValue(!checkBox.isChecked());
+                taskHasDoneRef(mCardKey, mWorkKey, mArrTask.get(getPosition()).getKey()).setValue(!checkBox.isChecked());
             }
 
         }
@@ -172,7 +172,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            taskRef(mCardKey, mWorkKey, arrTaskKey.get(getPosition())).setValue(null);
+                            taskRef(mCardKey, mWorkKey, mArrTaskKey.get(getPosition())).setValue(null);
                         }
                     });
             dialog.show();
@@ -226,34 +226,36 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public void addItem(Task task) {
-        arrTask.add(task);
-        arrTaskKey.add(task.getKey());
-        notifyItemInserted(arrTask.size() - 1);
+        mArrTask.add(task);
+        mArrTaskKey.add(task.getKey());
+        notifyItemInserted(mArrTask.size() - 1);
     }
 
     public void removeItem(int position) {
-        if (position >= 0 && position < arrTask.size()) {
-            arrTaskKey.remove(position);
-            arrTask.remove(position);
+        if (position >= 0 && position < mArrTask.size()) {
+            mArrTaskKey.remove(position);
+            mArrTask.remove(position);
             notifyItemRemoved(position);
         }
 
     }
 
     public void sortItem() {
-        Collections.sort(arrTask, comparator);
+        Collections.sort(mArrTask, comparator);
         notifyDataSetChanged();
     }
 
     public void changeItem(Task task, int position) {
-        arrTask.set(position, task);
-        arrTaskKey.set(position, task.getKey());
-        notifyItemChanged(position);
+        if (position > -1 && position < mArrTask.size()) {
+            mArrTask.set(position, task);
+            mArrTaskKey.set(position, task.getKey());
+            notifyItemChanged(position);
+        }
     }
 
     public void clearItem() {
-        arrTask.clear();
-        arrTaskKey.clear();
+        mArrTask.clear();
+        mArrTaskKey.clear();
         notifyDataSetChanged();
     }
 

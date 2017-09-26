@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +21,7 @@ import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Card;
 import com.example.viet.workup.ui.board.card.menu.CardListOptionMenu;
 import com.example.viet.workup.ui.work.WorkActivity;
+import com.example.viet.workup.utils.ApplicationUtils;
 import com.example.viet.workup.utils.DataUtils;
 
 import java.util.ArrayList;
@@ -49,31 +48,12 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     EditText edtEdit;
     @BindView(R.id.ivCheck)
     ImageView ivCheck;
-    TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (charSequence.toString().isEmpty()) {
-                ivCheck.setVisibility(View.GONE);
-            } else {
-                ivCheck.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
     private String mCardListKey;
     private String mBoardKey;
-    private CardRecyclerViewAdapter cardRecyclerViewAdapter;
-    private ArrayList<Card> arrCard = new ArrayList<>();
-    private ArrayList<String> arrCardKey = new ArrayList<>();
+    private CardRecyclerViewAdapter mCardRecyclerViewAdapter;
+    private ArrayList<Card> mArrCard = new ArrayList<>();
+    private ArrayList<String> mArrCardKey = new ArrayList<>();
 
     @Inject
     CardPresenter<CardMvpView> mPresenter;
@@ -106,7 +86,7 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     private void initViews() {
         tvTitle.setOnClickListener(this);
         ivCheck.setOnClickListener(this);
-        edtEdit.addTextChangedListener(textWatcher);
+        edtEdit.addTextChangedListener(ApplicationUtils.getTextWatcher(ivCheck));
         edtEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -115,15 +95,15 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
             }
         });
         btnAddCard.setOnClickListener(this);
-        cardRecyclerViewAdapter = new CardRecyclerViewAdapter(arrCard, arrCardKey);
-        cardRecyclerViewAdapter.setOnItemClickListenter(new Listener.OnItemClickListenter() {
+        mCardRecyclerViewAdapter = new CardRecyclerViewAdapter(mArrCard, mArrCardKey);
+        mCardRecyclerViewAdapter.setOnItemClickListenter(new Listener.OnItemClickListenter() {
             @Override
             public void onClick(View view, int position) {
-                mPresenter.onCardClick(mBoardKey, mCardListKey, arrCard.get(position).getKey());
+                mPresenter.onCardClick(mBoardKey, mCardListKey, mArrCard.get(position).getKey());
             }
         });
         recyclerViewCardList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewCardList.setAdapter(cardRecyclerViewAdapter);
+        recyclerViewCardList.setAdapter(mCardRecyclerViewAdapter);
     }
 
     @Override
@@ -134,7 +114,7 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
         ButterKnife.bind(this, view);
         initViews();
         mPresenter.onAttach(this);
-        arrCard.clear();
+        mArrCard.clear();
         mPresenter.onReceiveTitle(mBoardKey, mCardListKey);
         mPresenter.onReceiveData(mBoardKey, mCardListKey);
         return view;
@@ -160,17 +140,17 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
 
     @Override
     public void showCard(Card card) {
-        cardRecyclerViewAdapter.addItem(card);
+        mCardRecyclerViewAdapter.addItem(card);
     }
 
     @Override
     public void removeCard(Card card) {
-        cardRecyclerViewAdapter.removeItem(arrCardKey.indexOf(card.getKey()));
+        mCardRecyclerViewAdapter.removeItem(mArrCardKey.indexOf(card.getKey()));
     }
 
     @Override
     public void changeCard(Card card) {
-        cardRecyclerViewAdapter.changeItem(card, arrCardKey.indexOf(card.getKey()));
+        mCardRecyclerViewAdapter.changeItem(card, mArrCardKey.indexOf(card.getKey()));
     }
 
     @Override
@@ -188,7 +168,11 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btnAddCard) {
-            CardListOptionMenu cardListOptionMenu = new CardListOptionMenu(getContext(), view, mBoardKey, mCardListKey,tvTitle.getText().toString());
+            if (mArrCard.size() > 30) {
+                Toast.makeText(getContext(), "Cant add more card ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            CardListOptionMenu cardListOptionMenu = new CardListOptionMenu(getContext(), view, mBoardKey, mCardListKey, tvTitle.getText().toString());
             cardListOptionMenu.show();
         } else if (view.getId() == R.id.tvTitle) {
             edtEdit.setText(tvTitle.getText());

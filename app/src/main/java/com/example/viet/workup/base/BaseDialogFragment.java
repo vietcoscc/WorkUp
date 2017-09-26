@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class BaseDialogFragment extends DialogFragment implements MvpView {
         super.onCreate(savedInstanceState);
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         MyApplication myApplication = (MyApplication) appCompatActivity.getApplication();
-        mActivityComponent = myApplication.getmActivityComponent();
+        mActivityComponent = myApplication.getActivityComponent();
         mContext = getContext();
     }
 
@@ -71,7 +72,9 @@ public class BaseDialogFragment extends DialogFragment implements MvpView {
 
     @Override
     public void showMessge(String message) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(message)) {
+            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

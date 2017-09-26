@@ -39,15 +39,14 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.otherBoardRef;
 
 public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private AccountManager mAccountManager = AccountManager.getsInstance();
-    private ArrayList<UserInfo> arrUserInfo;
+    private ArrayList<UserInfo> mArrUserInfo;
     private Context mContext;
-    private ArrayList<Boolean> arrBit;
     private String mBoardKey;
     private boolean isBoardInitiator;
     private boolean isStar;
 
     public CardMemberRecyclerViewAdapetr(ArrayList<UserInfo> arrUserInfo, String boardKey, boolean isStar, boolean isBoardInitiator) {
-        this.arrUserInfo = arrUserInfo;
+        this.mArrUserInfo = arrUserInfo;
         this.mBoardKey = boardKey;
         this.isBoardInitiator = isBoardInitiator;
         this.isStar = isStar;
@@ -64,12 +63,12 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         CardMemberViewHolder viewHolder = (CardMemberViewHolder) holder;
-        viewHolder.setData(arrUserInfo.get(position), position);
+        viewHolder.setData(mArrUserInfo.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        return arrUserInfo.size();
+        return mArrUserInfo.size();
     }
 
     class CardMemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -90,11 +89,11 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
                         FireBaseDatabaseUtils.memberBoardRef(mBoardKey)
-                                .child(arrUserInfo.get(getPosition()).getUid())
-                                .setValue(arrUserInfo.get(getPosition()));
+                                .child(mArrUserInfo.get(getPosition()).getUid())
+                                .setValue(mArrUserInfo.get(getPosition()));
                     } else {
                         FireBaseDatabaseUtils.memberBoardRef(mBoardKey)
-                                .child(arrUserInfo.get(getPosition()).getUid())
+                                .child(mArrUserInfo.get(getPosition()).getUid())
                                 .removeValue();
                     }
 
@@ -110,14 +109,14 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                         .error(android.R.drawable.screen_background_dark)
                         .into(ivAvatar);
             } else {
-                Picasso.with(mContext).load(R.mipmap.ic_launcher_round)
+                Picasso.with(mContext).load(R.drawable.man)
                         .placeholder(android.R.drawable.screen_background_light)
                         .error(android.R.drawable.screen_background_dark)
                         .into(ivAvatar);
             }
 
             tvDisplayName.setText(userInfo.getDisplayName());
-//            getCheckObservable(arrUserInfo.get(position).getUid())
+//            getCheckObservable(mArrUserInfo.get(position).getUid())
 //                    .subscribeOn(Schedulers.io())
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribe(new Consumer<Boolean>() {
@@ -138,21 +137,21 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    otherBoardRef(arrUserInfo.get(getPosition()).getUid())
+                                    otherBoardRef(mArrUserInfo.get(getPosition()).getUid())
                                             .child(mAccountManager.getCurrentUser().getUid() + "+" + mBoardKey)
                                             .removeValue();
                                     String from = mAccountManager.getCurrentUser().getDisplayName();
                                     String message = " removed member : ";
-                                    String target = arrUserInfo.get(getPosition()).getDisplayName();
+                                    String target = mArrUserInfo.get(getPosition()).getDisplayName();
                                     String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
+                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp, false));
                                     checkBox.setChecked(false);
                                 }
                             });
                     dialog.show();
                 } else {
                     OtherBoard otherBoard = new OtherBoard(mAccountManager.getUserInfo().getUid(), mBoardKey, isStar);
-                    otherBoardRef(arrUserInfo.get(getPosition()).getUid())
+                    otherBoardRef(mArrUserInfo.get(getPosition()).getUid())
                             .child(otherBoard.getUid() + "+" + otherBoard.getBoardKey())
                             .setValue(otherBoard)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -160,9 +159,9 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
                                 public void onSuccess(Void aVoid) {
                                     String from = mAccountManager.getCurrentUser().getDisplayName();
                                     String message = " added member : ";
-                                    String target = arrUserInfo.get(getPosition()).getDisplayName();
+                                    String target = mArrUserInfo.get(getPosition()).getDisplayName();
                                     String timeStamp = CalendarUtils.getCurrentTime() + " " + CalendarUtils.getCurrentDate();
-                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp,false));
+                                    arrActivityRef(mBoardKey).push().setValue(new BoardUserActivity(from, message, target, timeStamp, false));
                                     checkBox.setChecked(true);
                                 }
                             });
@@ -195,13 +194,15 @@ public class CardMemberRecyclerViewAdapetr extends RecyclerView.Adapter<Recycler
 //    }
 
     public void addItem(UserInfo userInfo) {
-        arrUserInfo.add(userInfo);
-        notifyItemInserted(arrUserInfo.size() - 1);
+        mArrUserInfo.add(userInfo);
+        notifyItemInserted(mArrUserInfo.size() - 1);
     }
 
     public void removeItem(int position) {
-        arrUserInfo.remove(position);
-        notifyItemRemoved(position);
+        if (position > -1 && position < mArrUserInfo.size()) {
+            mArrUserInfo.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     private Listener.OnItemClickListenter onItemClickListenter;

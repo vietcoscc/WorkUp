@@ -52,20 +52,11 @@
             fab:fab_title="Background" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabViewMember"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_icon="@drawable/ic_person"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_title="Member" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddMember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_icon="@drawable/ic_person"
+            fab:fab_icon="@drawable/ic_add_member"
             fab:fab_labelStyle="@style/menu_labels_style"
             fab:fab_title="Add member" />
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BasePopupMenu;
 import com.example.viet.workup.model.image.Image;
+import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.util.ArrayList;
 
@@ -77,12 +78,20 @@ public class ItemImageImageOptionMenu extends BasePopupMenu implements ItemImage
         if (id == R.id.action_open) {
             mPresenter.onOpenImage();
         } else if (id == R.id.action_save) {
+            if (!ApplicationUtils.isNetworkConnectionAvailable(mContext)) {
+                Toast.makeText(mContext, "Network is not available !", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             if (hasPermission()) {
                 mPresenter.onSaveImage(mArrImage.get(mPosition));
             } else {
                 requestPermission();
             }
         } else if (id == R.id.action_set_as_background) {
+            if (!ApplicationUtils.isNetworkConnectionAvailable(mContext)) {
+                Toast.makeText(mContext, "Network is not available !", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             mPresenter.onSetImage(mArrImage.get(mPosition));
         }
         return false;

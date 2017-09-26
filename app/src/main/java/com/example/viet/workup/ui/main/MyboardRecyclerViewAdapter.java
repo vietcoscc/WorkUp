@@ -29,8 +29,8 @@ import butterknife.ButterKnife;
 public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Board> mArrBoard;
     private ArrayList<String> marrBoardKey;
-    private Context context;
-    private boolean type;
+    private Context mContext;
+    private boolean mType;
     private Listener.OnItemClickListenter mOnItemClickListenter;
     private Listener.OnItemLongClickListener mOnItemLongClickListener;
     Field field[] = R.raw.class.getFields();
@@ -38,17 +38,17 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public MyboardRecyclerViewAdapter(ArrayList<Board> arrBoard, ArrayList<String> arrBoardKey, boolean type) {
         this.mArrBoard = arrBoard;
         this.marrBoardKey = arrBoardKey;
-        this.type = type;
+        this.mType = type;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        mContext = parent.getContext();
         View view;
-        if (type) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_my_board_recycler_view, parent, false);
+        if (mType) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_my_board_recycler_view, parent, false);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.item_star_board_recycler_view, parent, false);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_star_board_recycler_view, parent, false);
         }
         return new MyboardViewHolder(view);
     }
@@ -100,8 +100,8 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             board.getImageUrl();
 
             try {
-//                InputStream inputStream = context.getResources().openRawResource();
-                Picasso.with(context).load(field[board.getImageUrl()].getInt(null))
+//                InputStream inputStream = mContext.getResources().openRawResource();
+                Picasso.with(mContext).load(field[board.getImageUrl()].getInt(null))
                         .resize(150, 100)
                         .centerCrop()
                         .placeholder(android.R.drawable.screen_background_light)
@@ -118,7 +118,7 @@ public class MyboardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             } else {
                 ivStar.setVisibility(View.INVISIBLE);
             }
-            AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
             itemView.startAnimation(animation);
         }
     }

@@ -18,19 +18,19 @@ public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
     public static final String TAG = "BoardViewPagerAdapter";
     private ArrayList<CardList> mArrCardList;
     private ArrayList<String> mArrCardListKey;
-    private String boardKey;
-    private ArrayList<Fragment> arrFragment = new ArrayList<>();
+    private String mBoardKey;
+    private ArrayList<Fragment> mArrFragment = new ArrayList<>();
 
     public BoardViewPagerAdapter(FragmentManager fm, String boardKey, ArrayList<CardList> arrCardList, ArrayList<String> arrCardListKey) {
         super(fm);
-        this.boardKey = boardKey;
+        this.mBoardKey = boardKey;
         this.mArrCardList = arrCardList;
         this.mArrCardListKey = arrCardListKey;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return arrFragment.get(position);
+        return mArrFragment.get(position);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
             if (cardList != null) {
                 mArrCardList.add(cardList);
                 mArrCardListKey.add(cardList.getKey());
-                arrFragment.add(CardFragment.newInstance(boardKey,cardList.getKey()));
+                mArrFragment.add(CardFragment.newInstance(mBoardKey,cardList.getKey()));
                 notifyDataSetChanged();
             }
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class BoardViewPagerAdapter extends FragmentStatePagerAdapter {
             if (position > -1 && position < mArrCardList.size()) {
                 mArrCardList.remove(position);
                 mArrCardListKey.remove(position);
-                arrFragment.remove(position);
+                mArrFragment.remove(position);
                 notifyDataSetChanged();
             }
         } catch (Exception e) {

@@ -147,15 +147,8 @@ public class CardPresenter<V extends CardMvpView> extends BasePresenter<V> imple
     }
 
     private CardDetail generateCardDetail(Card card, String description) {
-        String dueTime = "14:09";
-        ArrayList<Task> arrTask = new ArrayList<>();
-        WorkList workList = new WorkList("title", 0, arrTask);
         ArrayList<WorkList> arrWorkList = new ArrayList<>();
-        UserInfo userInfo =
-                mAccountManager.getUserInfo();
-        Comment comment = new Comment(userInfo, "Nguyen Quoc Viet", "");
         ArrayList<Comment> arrComment = new ArrayList<>();
-        ArrayList<String> arrAttachFile = new ArrayList<>();
-        return new CardDetail(description, dueTime, arrAttachFile, arrWorkList, arrComment);
+        return new CardDetail(description, arrWorkList, arrComment);
     }
 }

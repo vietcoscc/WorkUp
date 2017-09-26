@@ -22,11 +22,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<Comment> arrComment;
+    private ArrayList<Comment> mArrComment;
     private Context mContext;
 
     public CommentListRecyclerViewAdapter(ArrayList<Comment> arrComment) {
-        this.arrComment = arrComment;
+        this.mArrComment = arrComment;
     }
 
     @Override
@@ -39,12 +39,12 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
-        commentViewHolder.setData(arrComment.get(position));
+        commentViewHolder.setData(mArrComment.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return arrComment.size();
+        return mArrComment.size();
     }
 
     class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -79,12 +79,14 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     }
 
     public void addItem(Comment comment) {
-        arrComment.add(comment);
-        notifyItemInserted(arrComment.size() - 1);
+        mArrComment.add(comment);
+        notifyItemInserted(mArrComment.size() - 1);
     }
 
     public void removeItem(int position) {
-        arrComment.remove(position);
-        notifyItemRemoved(position);
+        if (position > -1 && position < mArrComment.size()) {
+            mArrComment.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 }

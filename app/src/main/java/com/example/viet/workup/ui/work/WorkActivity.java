@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.base.BaseActivity;
+import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Comment;
 import com.example.viet.workup.model.DueDate;
@@ -103,17 +104,18 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
     @BindView(R.id.edtEditDes)
     EditText edtEditDes;
     @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    private LabelRecyclerViewAdapter labelRecyclerViewAdapter;
-    private MemberRecyclerViewAdapter memberRecyclerViewAdapter;
-    private WorkListRecyclerViewAdapter workListRecyclerViewAdapter;
-    private CommentListRecyclerViewAdapter commentListRecyclerViewAdapter;
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private LabelRecyclerViewAdapter mLabelRecyclerViewAdapter;
+    private MemberRecyclerViewAdapter mMemberRecyclerViewAdapter;
+    private WorkListRecyclerViewAdapter mWorkListRecyclerViewAdapter;
+    private CommentListRecyclerViewAdapter mCommentListRecyclerViewAdapter;
 
-    private ArrayList<Label> arrLabel = new ArrayList<>();
-    private ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
-    private ArrayList<WorkList> arrWorkList = new ArrayList<>();
-    private ArrayList<String> arrWorkListKey = new ArrayList<>();
-    private ArrayList<Comment> arrComment = new ArrayList<>();
+    private ArrayList<Label> mArrLabel = new ArrayList<>();
+    private ArrayList<String> mArrLabelKey = new ArrayList<>();
+    private ArrayList<UserInfo> mArrUserInfo = new ArrayList<>();
+    private ArrayList<WorkList> mArrWorkList = new ArrayList<>();
+    private ArrayList<String> mArrWorkListKey = new ArrayList<>();
+    private ArrayList<Comment> mArrComment = new ArrayList<>();
     private String mCardKey;
 
     @Inject
@@ -172,7 +174,7 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
         });
         toolbar.setOnClickListener(this);
         //
-        collapsingToolbarLayout.setTitleEnabled(false);
+        mCollapsingToolbarLayout.setTitleEnabled(false);
         //
         edtComment.addTextChangedListener(ApplicationUtils.getTextWatcher(ivComment));
         ivComment.setOnClickListener(this);
@@ -185,22 +187,34 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
         fabAddDueDate.setOnClickListener(this);
         fabAddWorkList.setOnClickListener(this);
         //
-        labelRecyclerViewAdapter = new LabelRecyclerViewAdapter(arrLabel);
+        mLabelRecyclerViewAdapter = new LabelRecyclerViewAdapter(mArrLabel, mArrLabelKey);
+        mLabelRecyclerViewAdapter.setOnItemLongClickListener(new Listener.OnItemLongClickListener() {
+            @Override
+            public void onLongClick(View view, final int position) {
+                ApplicationUtils.buildConfirmDialog(WorkActivity.this, "Are you sure want to delete",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mPresenter.onDeleteLabel(mCardKey, mArrLabelKey.get(position));
+                            }
+                        }).show();
+            }
+        });
         recyclerViewLabel.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewLabel.setAdapter(labelRecyclerViewAdapter);
+        recyclerViewLabel.setAdapter(mLabelRecyclerViewAdapter);
         //
-        memberRecyclerViewAdapter = new MemberRecyclerViewAdapter(arrUserInfo);
+        mMemberRecyclerViewAdapter = new MemberRecyclerViewAdapter(mArrUserInfo);
         recyclerViewMember.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewMember.setAdapter(memberRecyclerViewAdapter);
+        recyclerViewMember.setAdapter(mMemberRecyclerViewAdapter);
         //
-        workListRecyclerViewAdapter = new WorkListRecyclerViewAdapter(arrWorkList, arrWorkListKey, mCardKey);
+        mWorkListRecyclerViewAdapter = new WorkListRecyclerViewAdapter(mArrWorkList, mArrWorkListKey, mCardKey);
 
         recyclerViewWorkList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerViewWorkList.setAdapter(workListRecyclerViewAdapter);
+        recyclerViewWorkList.setAdapter(mWorkListRecyclerViewAdapter);
         //
-        commentListRecyclerViewAdapter = new CommentListRecyclerViewAdapter(arrComment);
+        mCommentListRecyclerViewAdapter = new CommentListRecyclerViewAdapter(mArrComment);
         recyclerViewComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
-        recyclerViewComment.setAdapter(commentListRecyclerViewAdapter);
+        recyclerViewComment.setAdapter(mCommentListRecyclerViewAdapter);
         //
 
         //
@@ -248,10 +262,15 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                labelRecyclerViewAdapter.addItem(label);
+                mLabelRecyclerViewAdapter.addItem(label);
             }
         });
 
+    }
+
+    @Override
+    public void deleteLabel(String labelKey) {
+        mLabelRecyclerViewAdapter.removeItem(mArrLabelKey.indexOf(labelKey));
     }
 
     @Override
@@ -259,7 +278,7 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                memberRecyclerViewAdapter.addItem(userInfo);
+                mMemberRecyclerViewAdapter.addItem(userInfo);
             }
         });
 
@@ -267,22 +286,22 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
 
     @Override
     public void showWordList(final WorkList workList) {
-        workListRecyclerViewAdapter.addItem(workList);
+        mWorkListRecyclerViewAdapter.addItem(workList);
     }
 
     @Override
     public void deleteWorkList(String key) {
-        workListRecyclerViewAdapter.removeItem(arrWorkListKey.indexOf(key));
+        mWorkListRecyclerViewAdapter.removeItem(mArrWorkListKey.indexOf(key));
     }
 
     @Override
     public void changeWorkList(WorkList workList) {
-        workListRecyclerViewAdapter.changeItem(workList, arrWorkListKey.indexOf(workList.getKey()));
+        mWorkListRecyclerViewAdapter.changeItem(workList, mArrWorkListKey.indexOf(workList.getKey()));
     }
 
     @Override
     public void showComment(final Comment comment) {
-        commentListRecyclerViewAdapter.addItem(comment);
+        mCommentListRecyclerViewAdapter.addItem(comment);
     }
 
     @Override
@@ -354,6 +373,10 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.fabAddLabel) {
+            if (mArrLabel.size() > 30) {
+                Toast.makeText(this, "Cant add more label ", Toast.LENGTH_SHORT).show();
+                return;
+            }
             LabelDialogFragment.newInstance(mCardKey).show(getSupportFragmentManager(), "");
         } else if (id == R.id.fabAddDueDate) {
             final DueDateDialog dialog = new DueDateDialog(this, CalendarUtils.getYear(),
@@ -362,12 +385,20 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
                     mCardKey);
             dialog.show();
         } else if (id == R.id.fabAddWorkList) {
+            if (mArrWorkList.size() > 30) {
+                Toast.makeText(this, "Cant add more work ", Toast.LENGTH_SHORT).show();
+                return;
+            }
             WorkListDialogFragment.newInstance(mCardKey).show(getSupportFragmentManager(), "");
         } else if (id == R.id.ivComment) {
             InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             manager.hideSoftInputFromWindow(edtComment.getWindowToken(), 0);
             mPresenter.onAddComment(mCardKey, edtComment.getText().toString().trim());
         } else if (id == R.id.fabAddCover) {
+            if (!ApplicationUtils.isNetworkConnectionAvailable(this)) {
+                Toast.makeText(this, "Network is not available !", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(this, ImageActivity.class);
             FireBaseStorageUtils.setCurrentCardKey(mCardKey);
             startActivity(intent);

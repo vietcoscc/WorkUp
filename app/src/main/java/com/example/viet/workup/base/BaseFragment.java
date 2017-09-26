@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.example.viet.workup.MyApplication;
@@ -17,36 +18,42 @@ import com.example.viet.workup.di.component.ActivityComponent;
 
 public class BaseFragment extends Fragment implements MvpView {
     private ActivityComponent mActivityComponent;
-    protected ProgressDialog progressDialog;
+    protected ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         MyApplication myApplication = (MyApplication) appCompatActivity.getApplication();
-        mActivityComponent = myApplication.getmActivityComponent();
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setCancelable(false);
+        mActivityComponent = myApplication.getActivityComponent();
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setCancelable(false);
     }
 
     @Override
     public void showProgress() {
-        progressDialog.show();
+        if (mProgressDialog != null) {
+            mProgressDialog.show();
+        }
     }
 
     @Override
     public void hideProgress() {
-        progressDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
     public void showMessge(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(message)) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public boolean isOnProgress() {
-        if (progressDialog != null && progressDialog.isShowing()) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return true;
         }
         return false;

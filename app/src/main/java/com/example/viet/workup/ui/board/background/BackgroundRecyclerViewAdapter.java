@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  */
 
 public class BackgroundRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Field> arrImage = ApplicationUtils.getArrId();
+    private List<Field> mArrImage = ApplicationUtils.getArrId();
     private Context mContext;
     private int mCurrentPosition;
     private BackgroundViewHolder currentHolder;
@@ -49,7 +49,7 @@ public class BackgroundRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             } else {
                 backgroundViewHolder.layoutCheck.setVisibility(View.GONE);
             }
-            backgroundViewHolder.setData(arrImage.get(position).getInt(null));
+            backgroundViewHolder.setData(mArrImage.get(position).getInt(null));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class BackgroundRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemCount() {
-        return arrImage.size();
+        return mArrImage.size();
     }
 
     class BackgroundViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

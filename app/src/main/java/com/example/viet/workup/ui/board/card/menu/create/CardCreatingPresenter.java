@@ -58,7 +58,7 @@ public class CardCreatingPresenter<V extends CardCreatingMvpView> extends BasePr
         arrLabel.add(label);
         ArrayList<UserInfo> arrUserInfo = new ArrayList<>();
         arrUserInfo.add(userInfo);
-        final Card card = new Card("", title, 0, "", dueDate, arrLabel, arrUserInfo, !description.isEmpty(), description);
+        final Card card = new Card("", title, 0, "", dueDate,arrUserInfo, !description.isEmpty(), description);
         arrCardRef(boardKey, cardListKey).push().setValue(card).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

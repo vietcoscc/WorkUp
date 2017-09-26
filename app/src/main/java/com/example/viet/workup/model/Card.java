@@ -16,7 +16,6 @@ public class Card {
     private int commentCount;
     private String checkWork;
     private DueDate dueDate;
-    private ArrayList<Label> arrLabel;
     private ArrayList<UserInfo> arrUserInfo;
     private boolean hasDescription;
     private String description;
@@ -30,7 +29,6 @@ public class Card {
                 int commentCount,
                 String checkWork,
                 DueDate dueDate,
-                ArrayList<Label> arrLabel,
                 ArrayList<UserInfo> arrUserInfo,
                 boolean hasDescription, String description) {
         this.coverImageUrl = coverImageUrl;
@@ -38,7 +36,6 @@ public class Card {
         this.commentCount = commentCount;
         this.checkWork = checkWork;
         this.dueDate = dueDate;
-        this.arrLabel = arrLabel;
         this.arrUserInfo = arrUserInfo;
         this.hasDescription = hasDescription;
         this.description = description;
@@ -58,14 +55,6 @@ public class Card {
 
     public void setCardListKey(String cardListKey) {
         this.cardListKey = cardListKey;
-    }
-
-    public ArrayList<Label> getArrLabel() {
-        return arrLabel;
-    }
-
-    public void setArrLabel(ArrayList<Label> arrLabel) {
-        this.arrLabel = arrLabel;
     }
 
     public String getDescription() {
