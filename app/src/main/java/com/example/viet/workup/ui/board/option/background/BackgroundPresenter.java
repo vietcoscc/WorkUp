@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.board.background;
+package com.example.viet.workup.ui.board.option.background;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

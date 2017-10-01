@@ -27,6 +27,7 @@ import com.example.viet.workup.ui.board.BoardActivity;
 import com.example.viet.workup.ui.introduced.IntroducedActivity;
 import com.example.viet.workup.ui.main.board.BoardCreatingDialog;
 import com.example.viet.workup.ui.main.menu.BoardOptionMenu;
+import com.example.viet.workup.ui.profile.ProfileActivity;
 import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.io.InputStream;
@@ -189,6 +190,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
             mPresenter.onOptionMenuActionLogoutClick();
+        } else if (item.getItemId() == R.id.action_profile) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -49,6 +49,9 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
 
         <service android:name=".service.NotificationService" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>

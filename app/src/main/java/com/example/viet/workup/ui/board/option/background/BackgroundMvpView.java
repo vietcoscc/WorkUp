@@ -1,7 +1,6 @@
-package com.example.viet.workup.ui.board.background;
+package com.example.viet.workup.ui.board.option.background;
 
 import com.example.viet.workup.base.MvpView;
-import com.example.viet.workup.model.UserInfo;
 
 /**
  * Created by viet on 15/09/2017.

@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.board.list_card;
+package com.example.viet.workup.ui.board.option.list_card;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

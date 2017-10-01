@@ -30,4 +30,10 @@
     <string name="action_open">Open</string>
     <string name="action_save">Save</string>
     <string name="action_set_as_background">Set as image cover</string>
+    <string name="tvDisplayName">Display name :</string>
+    <string name="tvEmail">Email :</string>
+    <string name="tvJoindedDate">Joined date :</string>
+    <string name="tvUid">Uid :</string>
+    <string name="tvPhotoUrl">Photo url :</string>
+    <string name="action_profile">Profile</string>
 </resources>

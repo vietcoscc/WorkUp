@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.board.list_card;
+package com.example.viet.workup.ui.board.option.list_card;
 
 import com.example.viet.workup.base.MvpView;
 

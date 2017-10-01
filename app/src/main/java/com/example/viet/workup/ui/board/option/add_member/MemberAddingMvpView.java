@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.board.add_member;
+package com.example.viet.workup.ui.board.option.add_member;
 
 import com.example.viet.workup.base.MvpView;
 import com.example.viet.workup.model.UserInfo;

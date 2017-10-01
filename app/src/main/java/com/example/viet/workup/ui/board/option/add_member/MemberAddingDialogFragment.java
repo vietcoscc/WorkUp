@@ -1,4 +1,4 @@
-package com.example.viet.workup.ui.board.add_member;
+package com.example.viet.workup.ui.board.option.add_member;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

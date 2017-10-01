@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.viet.workup.R;
@@ -55,6 +56,15 @@ public class ApplicationUtils {
 
     public static Dialog buildConfirmDialog(Context context, String message, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", onClickListener);
+        builder.setNegativeButton("CANCEL", null);
+        return builder.create();
+    }
+
+    public static Dialog buildInputDialog(Context context, String message, DialogInterface.OnClickListener onClickListener,EditText editText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(editText);
         builder.setMessage(message);
         builder.setPositiveButton("OK", onClickListener);
         builder.setNegativeButton("CANCEL", null);

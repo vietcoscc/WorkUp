@@ -54,4 +54,12 @@ public class DataUtils {
         }
         return false;
     }
+
+    public static boolean isDisplayNameValid(String displayName) {
+        int length = displayName.length();
+        if (!TextUtils.isEmpty(displayName) && length >= 4 && length <= 20) {
+            return true;
+        }
+        return false;
+    }
 }

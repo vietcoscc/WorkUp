@@ -10,11 +10,16 @@ import com.google.firebase.storage.StorageReference;
 public class FireBaseStorageUtils {
     private static final String IMAEGE = "imageCover";
     private static final String IMAGE_THUMB = "imageCoverThumb";
+    public static final String AVATAR = "avatar";
     private static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private static String currentCardKey;
 
     public static StorageReference getImageCoverRef(String cardKey) {
         return mStorage.child(IMAEGE + "/" + cardKey + ".jpg");
+    }
+
+    public static StorageReference getAvatarRef(String uid) {
+        return mStorage.child(AVATAR + "/" + uid + ".jpg");
     }
 
     public static StorageReference getImageCoverThumbRef(String cardKey) {

@@ -38,6 +38,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<String> mArrCardKey;
     private Context mContext;
     private Listener.OnItemClickListenter mOnItemClickListenter;
+    private Listener.OnItemLongClickListener mOnItemLongClickListener;
     private int mLastPosition = -1;
 
     public CardRecyclerViewAdapter(ArrayList<Card> arrCard, ArrayList<String> arrCardKey) {
@@ -71,7 +72,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mArrCard.size();
     }
 
-    class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         @BindView(R.id.ivCover)
         ImageView ivCover;
         //        @BindView(R.id.ivAttachment)
@@ -106,7 +107,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-
+            itemView.setOnLongClickListener(this);
             recyclerViewLabel.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
             labelRecyclerViewAdapter = new LabelRecyclerViewAdapter(arrLabel, arrLabelKey);
             recyclerViewLabel.setAdapter(labelRecyclerViewAdapter);
@@ -209,6 +210,14 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 mOnItemClickListenter.onClick(view, getPosition());
             }
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (mOnItemLongClickListener != null) {
+                mOnItemLongClickListener.onLongClick(view, getPosition());
+            }
+            return false;
+        }
     }
 
     public void addItem(Card card) {
@@ -241,5 +250,13 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void setOnItemClickListenter(Listener.OnItemClickListenter onItemClickListenter) {
         this.mOnItemClickListenter = onItemClickListenter;
+    }
+
+    public Listener.OnItemLongClickListener getOnItemLongClickListener() {
+        return mOnItemLongClickListener;
+    }
+
+    public void setOnItemLongClickListener(Listener.OnItemLongClickListener mOnItemLongClickListener) {
+        this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
 }

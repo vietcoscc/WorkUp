@@ -102,6 +102,12 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
                 mPresenter.onCardClick(mBoardKey, mCardListKey, mArrCard.get(position).getKey());
             }
         });
+        mCardRecyclerViewAdapter.setOnItemLongClickListener(new Listener.OnItemLongClickListener() {
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        });
         recyclerViewCardList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewCardList.setAdapter(mCardRecyclerViewAdapter);
     }

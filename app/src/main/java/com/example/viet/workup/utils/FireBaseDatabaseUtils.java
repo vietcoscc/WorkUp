@@ -35,14 +35,20 @@ public class FireBaseDatabaseUtils {
     private static final String IS_STAR = "star";
     private static final String OTHER_BOARD = "otherBoard";
     public static final String ARR_ACTIVITY = "arrActivity";
+    private static final String DISPLAY_NAME = "displayName";
     private static DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
     public static DatabaseReference accountRef() {
         return mRootRef.child(ACCOUNT);
     }
 
+
     public static DatabaseReference userAccountRef(String uid) {
         return accountRef().child(uid);
+    }
+
+    public static DatabaseReference displayNameRef(String uid) {
+        return userAccountRef(uid).child(DISPLAY_NAME);
     }
 
     public static DatabaseReference boardRef() {
