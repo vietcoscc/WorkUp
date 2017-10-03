@@ -5,25 +5,25 @@ package com.example.viet.workup.model;
  */
 
 public class Comment {
-    private UserInfo userInfo;
+    private String uid;
     private String content;
     private String timeStamp;
 
     public Comment() {
     }
 
-    public Comment(UserInfo userInfo, String content, String timeStamp) {
-        this.userInfo = userInfo;
+    public Comment(String uid, String content, String timeStamp) {
+        this.uid = uid;
         this.content = content;
         this.timeStamp = timeStamp;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getContent() {

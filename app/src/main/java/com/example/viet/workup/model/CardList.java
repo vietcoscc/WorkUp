@@ -1,5 +1,7 @@
 package com.example.viet.workup.model;
 
+import java.io.Serializable;
+
 /**
  * Created by viet on 12/09/2017.
  */

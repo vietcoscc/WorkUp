@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.image.Category;
+import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.util.ArrayList;
 
@@ -64,12 +64,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         public void setData(Category category) {
-            Glide.with(mContext)
-                    .load(category.getCategoryImageThumb())
-                    .placeholder(android.R.drawable.screen_background_light)
-                    .error(android.R.drawable.screen_background_dark)
-                    .centerCrop()
-                    .into(ivCategory);
+            ApplicationUtils.glide(mContext, category.getCategoryImageThumb(), ivCategory);
             tvCategoryName.setText(category.getCategoryName());
             tvTotalWallpaper.setText(category.getTotalWallpager());
         }
@@ -86,10 +81,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
-
     public interface OnItemClickListener {
         void onClick(View view, int position);
     }
-
-
 }

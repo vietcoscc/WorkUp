@@ -3,7 +3,6 @@ package com.example.viet.workup.ui.main;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -12,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +22,7 @@ import com.example.viet.workup.base.BaseActivity;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.manager.AccountManager;
 import com.example.viet.workup.model.Board;
+import com.example.viet.workup.model.UserInfo;
 import com.example.viet.workup.service.NotificationService;
 import com.example.viet.workup.ui.board.BoardActivity;
 import com.example.viet.workup.ui.introduced.IntroducedActivity;
@@ -29,6 +30,9 @@ import com.example.viet.workup.ui.main.board.BoardCreatingDialog;
 import com.example.viet.workup.ui.main.menu.BoardOptionMenu;
 import com.example.viet.workup.ui.profile.ProfileActivity;
 import com.example.viet.workup.utils.ApplicationUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -48,6 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.BOARD;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.STAR_BOARD;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.UID;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.userAccountRef;
 
 public class MainActivity extends BaseActivity implements MainMvpView, View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -156,28 +161,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, View.OnCl
     }
 
     private void initToolbar() {
-        String displayName = mAccountManager.getCurrentUser().getDisplayName();
-        if (displayName == null || displayName.isEmpty()) {
-            toolbar.setTitle(R.string.app_name);
-        } else {
-            toolbar.setTitle(" " + displayName);
-        }
-        setSupportActionBar(toolbar);
-        Uri photoUrl = mAccountManager.getCurrentUser().getPhotoUrl();
-        if (photoUrl == null || photoUrl.toString().isEmpty()) {
-            getSupportActionBar().setIcon(R.drawable.man);
-        } else {
-            getDrawableObservable(photoUrl.toString())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Drawable>() {
-                        @Override
-                        public void accept(Drawable drawable) throws Exception {
-                            getSupportActionBar().setIcon(drawable);
-                        }
-                    });
-        }
+        userAccountRef(mAccountManager.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
+                String displayName = userInfo.getDisplayName();
+                if (displayName == null || displayName.isEmpty()) {
+                    toolbar.setTitle(R.string.app_name);
+                } else {
+                    toolbar.setTitle(" " + displayName);
+                }
+                setSupportActionBar(toolbar);
+                String photoUrl = userInfo.getPhotoUrl();
+                if (TextUtils.isEmpty(photoUrl)) {
+                    getSupportActionBar().setIcon(R.drawable.man);
+                } else {
+                    getDrawableObservable(photoUrl.toString())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Drawable>() {
+                                @Override
+                                public void accept(Drawable drawable) throws Exception {
+                                    getSupportActionBar().setIcon(drawable);
+                                }
+                            });
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

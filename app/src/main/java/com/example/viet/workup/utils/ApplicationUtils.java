@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.BoardUserActivity;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -62,7 +64,7 @@ public class ApplicationUtils {
         return builder.create();
     }
 
-    public static Dialog buildInputDialog(Context context, String message, DialogInterface.OnClickListener onClickListener,EditText editText) {
+    public static Dialog buildInputDialog(Context context, String message, DialogInterface.OnClickListener onClickListener, EditText editText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(editText);
         builder.setMessage(message);
@@ -113,5 +115,37 @@ public class ApplicationUtils {
 
     public static void setInApp(boolean inApp) {
         ApplicationUtils.inApp = inApp;
+    }
+
+    public static void picasso(Context context, String url, ImageView iv) {
+        if (TextUtils.isEmpty(url) || url.equals("null")) {
+            Picasso.with(context)
+                    .load(R.drawable.man)
+                    .placeholder(android.R.drawable.screen_background_light)
+                    .error(android.R.drawable.screen_background_dark)
+                    .into(iv);
+        } else {
+            Picasso.with(context)
+                    .load(url)
+                    .placeholder(android.R.drawable.screen_background_light)
+                    .error(android.R.drawable.screen_background_dark)
+                    .into(iv);
+        }
+    }
+
+    public static void glide(Context context, String url, ImageView iv) {
+        if (TextUtils.isEmpty(url) || url.equals("null")) {
+            Glide.with(context)
+                    .load(R.drawable.man)
+                    .placeholder(android.R.drawable.screen_background_light)
+                    .error(android.R.drawable.screen_background_dark)
+                    .into(iv);
+        } else {
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(android.R.drawable.screen_background_light)
+                    .error(android.R.drawable.screen_background_dark)
+                    .into(iv);
+        }
     }
 }

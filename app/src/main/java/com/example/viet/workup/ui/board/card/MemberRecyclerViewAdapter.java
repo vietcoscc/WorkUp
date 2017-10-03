@@ -11,7 +11,11 @@ import android.view.ViewGroup;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.UserInfo;
-import com.squareup.picasso.Picasso;
+import com.example.viet.workup.utils.ApplicationUtils;
+import com.example.viet.workup.utils.FireBaseDatabaseUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -66,20 +70,20 @@ public class MemberRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             ViewCompat.setNestedScrollingEnabled(itemView, false);
         }
 
-        public void setData(UserInfo userInfo) {
-            if (userInfo.getPhotoUrl() == null || userInfo.getPhotoUrl().isEmpty()||userInfo.getPhotoUrl().equals("null")) {
-                Picasso.with(mContext)
-                        .load(R.drawable.man)
-                        .placeholder(android.R.drawable.screen_background_light)
-                        .error(android.R.drawable.screen_background_dark)
-                        .into(ivMember);
-            } else {
-                Picasso.with(mContext)
-                        .load(userInfo.getPhotoUrl())
-                        .placeholder(android.R.drawable.screen_background_light)
-                        .error(android.R.drawable.screen_background_dark)
-                        .into(ivMember);
-            }
+        public void setData(final UserInfo userInfo) {
+            FireBaseDatabaseUtils.userAccountRef(userInfo.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserInfo uf = dataSnapshot.getValue(UserInfo.class);
+                    ApplicationUtils.picasso(mContext, uf.getPhotoUrl(), ivMember);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
 
 //            getDrawableObservable(userInfo.getPhotoUrl())
 //                    .subscribeOn(Schedulers.io())

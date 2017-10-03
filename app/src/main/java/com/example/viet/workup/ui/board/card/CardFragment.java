@@ -20,6 +20,7 @@ import com.example.viet.workup.base.BaseFragment;
 import com.example.viet.workup.event.Listener;
 import com.example.viet.workup.model.Card;
 import com.example.viet.workup.ui.board.card.menu.CardListOptionMenu;
+import com.example.viet.workup.ui.board.card.move.CardMovingDialog;
 import com.example.viet.workup.ui.work.WorkActivity;
 import com.example.viet.workup.utils.ApplicationUtils;
 import com.example.viet.workup.utils.DataUtils;
@@ -105,7 +106,8 @@ public class CardFragment extends BaseFragment implements CardMvpView, View.OnCl
         mCardRecyclerViewAdapter.setOnItemLongClickListener(new Listener.OnItemLongClickListener() {
             @Override
             public void onLongClick(View view, int position) {
-
+                CardMovingDialog cardMovingDialog = CardMovingDialog.newInstance(mBoardKey, mCardListKey, mArrCardKey.get(position));
+                cardMovingDialog.show(getFragmentManager(), "");
             }
         });
         recyclerViewCardList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

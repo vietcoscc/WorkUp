@@ -35,7 +35,6 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.dueDateCardRef
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.labelCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.memberCardRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.titleCardRed;
-import static com.example.viet.workup.utils.FireBaseDatabaseUtils.userAccountRef;
 
 /**
  * Created by viet on 13/09/2017.
@@ -387,42 +386,30 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
             return;
         }
         getmMvpView().resetTextComment();
-        userAccountRef(mAccountManager.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        arrCommentListRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot2) {
-                final UserInfo userInfo = dataSnapshot2.getValue(UserInfo.class);
-                arrCommentListRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot1) {
-                        Comment comment = new Comment(userInfo, content.trim(), CalendarUtils.getCurrentTime());
-                        arrCommentListRef(cardKey).push().setValue(comment)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            commentCountRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    int count = dataSnapshot.getValue(Integer.class);
-                                                    commentCountRef(cardKey).setValue(count + 1);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
+            public void onDataChange(DataSnapshot dataSnapshot1) {
+                Comment comment = new Comment(mAccountManager.getCurrentUser().getUid(), content.trim(), CalendarUtils.getCurrentTime());
+                arrCommentListRef(cardKey).push().setValue(comment)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    commentCountRef(cardKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            int count = dataSnapshot.getValue(Integer.class);
+                                            commentCountRef(cardKey).setValue(count + 1);
                                         }
-                                    }
-                                });
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-
+                                        }
+                                    });
+                                }
+                            }
+                        });
             }
 
             @Override
@@ -432,4 +419,5 @@ public class WorkPresenter<V extends WorkMvpView> extends BasePresenter<V> imple
         });
 
     }
+
 }

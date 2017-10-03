@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.image.Image;
+import com.example.viet.workup.utils.ApplicationUtils;
 
 import java.util.ArrayList;
 
@@ -70,12 +70,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         public void setData(Image image) {
-            Glide.with(mContext)
-                    .load(image.getWallpagerImageThumb())
-                    .placeholder(android.R.drawable.screen_background_light)
-                    .error(android.R.drawable.screen_background_dark)
-                    .centerCrop()
-                    .into(ivImage);
+            ApplicationUtils.glide(mContext, image.getCategoryImageThumb(), ivImage);
             tvId.setText("Id : " + image.getId());
             tvCatId.setText("Cat id : " + image.getCatId());
             tvCategoryName.setText("Cat name : " + image.getCategoryName());
@@ -91,8 +86,8 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @Override
         public boolean onLongClick(View view) {
-            if(mOnItemLongClickListener!=null){
-                mOnItemLongClickListener.onLongClick(view,getPosition());
+            if (mOnItemLongClickListener != null) {
+                mOnItemLongClickListener.onLongClick(view, getPosition());
             }
             return false;
         }

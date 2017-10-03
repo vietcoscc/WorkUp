@@ -212,7 +212,7 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
         recyclerViewWorkList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewWorkList.setAdapter(mWorkListRecyclerViewAdapter);
         //
-        mCommentListRecyclerViewAdapter = new CommentListRecyclerViewAdapter(mArrComment);
+        mCommentListRecyclerViewAdapter = new CommentListRecyclerViewAdapter(mArrComment, mCardKey);
         recyclerViewComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
         recyclerViewComment.setAdapter(mCommentListRecyclerViewAdapter);
         //
@@ -249,7 +249,6 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
             ivCover.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(url)
-//                    .resize(500,300)
                     .centerCrop()
                     .placeholder(android.R.drawable.screen_background_light)
                     .error(android.R.drawable.screen_background_dark)

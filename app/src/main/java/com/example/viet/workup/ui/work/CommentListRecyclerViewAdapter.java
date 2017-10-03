@@ -9,6 +9,12 @@ import android.widget.TextView;
 
 import com.example.viet.workup.R;
 import com.example.viet.workup.model.Comment;
+import com.example.viet.workup.model.UserInfo;
+import com.example.viet.workup.utils.ApplicationUtils;
+import com.example.viet.workup.utils.FireBaseDatabaseUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,9 +30,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Comment> mArrComment;
     private Context mContext;
+    private String mCardKey;
 
-    public CommentListRecyclerViewAdapter(ArrayList<Comment> arrComment) {
+    public CommentListRecyclerViewAdapter(ArrayList<Comment> arrComment, String cardKey) {
         this.mArrComment = arrComment;
+        this.mCardKey = cardKey;
     }
 
     @Override
@@ -60,21 +68,22 @@ public class CommentListRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             ButterKnife.bind(this, itemView);
         }
 
-        public void setData(Comment comment) {
-            if (comment.getUserInfo().getPhotoUrl().isEmpty()) {
-                Picasso.with(mContext).load(R.drawable.man)
-                        .placeholder(android.R.drawable.screen_background_light)
-                        .error(android.R.drawable.screen_background_dark)
-                        .into(ivAvatar);
-            } else {
-                Picasso.with(mContext).load(comment.getUserInfo().getPhotoUrl())
-                        .placeholder(android.R.drawable.screen_background_light)
-                        .error(android.R.drawable.screen_background_dark)
-                        .into(ivAvatar);
-            }
+        public void setData(final Comment comment) {
+            FireBaseDatabaseUtils.userAccountRef(comment.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserInfo userInfo = dataSnapshot.getValue(UserInfo.class);
+                    ApplicationUtils.picasso(mContext,userInfo.getPhotoUrl(),ivAvatar);
+                    tvDisplayName.setText(userInfo.getDisplayName());
+                    tvComment.setText(comment.getContent());
+                }
 
-            tvDisplayName.setText(comment.getUserInfo().getDisplayName());
-            tvComment.setText(comment.getContent());
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         }
     }
 
