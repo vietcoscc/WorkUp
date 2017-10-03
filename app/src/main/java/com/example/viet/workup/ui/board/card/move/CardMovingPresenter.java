@@ -4,6 +4,7 @@ import com.example.viet.workup.base.BasePresenter;
 import com.example.viet.workup.model.Card;
 import com.example.viet.workup.model.CardList;
 import com.example.viet.workup.model.Comment;
+import com.example.viet.workup.model.Label;
 import com.example.viet.workup.model.Task;
 import com.example.viet.workup.model.WorkList;
 import com.example.viet.workup.utils.FireBaseDatabaseUtils;
@@ -21,6 +22,7 @@ import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrCommentList
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrTaskListRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.arrWorkListRef;
 import static com.example.viet.workup.utils.FireBaseDatabaseUtils.descriptionCardRef;
+import static com.example.viet.workup.utils.FireBaseDatabaseUtils.labelCardRef;
 
 /**
  * Created by viet on 01/10/2017.
@@ -150,6 +152,27 @@ public class CardMovingPresenter<V extends CardMovingMvpView> extends BasePresen
                     WorkList work = item.getValue(WorkList.class);
                     arrWorkListRef(cardDataKey).child(item.getKey()).removeValue();
                     arrWorkListRef(cardDataDesKey).child(item.getKey()).setValue(work);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        labelCardRef(cardDataKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> labels = dataSnapshot.getChildren().iterator();
+                while (labels.hasNext()) {
+                    DataSnapshot label = labels.next();
+                    Label label1 = label.getValue(Label.class);
+                    String labelKey = label.getKey();
+                    labelCardRef(cardDataKey).child(labelKey).removeValue();
+                    labelCardRef(cardDataDesKey).child(labelKey).setValue(label1);
+                    if (getmMvpView() != null) {
+                        getmMvpView().showMessge("Success");
+                    }
                 }
             }
 

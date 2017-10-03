@@ -304,11 +304,6 @@ public class WorkActivity extends BaseActivity implements WorkMvpView, View.OnCl
     }
 
     @Override
-    public void showAttachment(String attachFile) {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
