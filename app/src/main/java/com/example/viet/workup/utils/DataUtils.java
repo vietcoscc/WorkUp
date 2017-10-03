@@ -23,13 +23,6 @@ public class DataUtils {
         return false;
     }
 
-    public static boolean isCardNameValid(String name) {
-        int length = name.length();
-        if (!TextUtils.isEmpty(name) && length >= 5 && length <= 30) {
-            return true;
-        }
-        return false;
-    }
 
     public static boolean isWorkListNameValid(String name) {
         int length = name.length();

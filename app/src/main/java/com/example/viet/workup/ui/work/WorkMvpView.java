@@ -22,14 +22,10 @@ public interface WorkMvpView extends MvpView {
 
     void showWordList(WorkList workList);
 
-    //
     void deleteWorkList(String key);
 
     void changeWorkList(WorkList workList);
 
-    void showAttachment(String attachFile);
-
-    //
     void showComment(Comment comment);
 
     void showDueDate(DueDate dueDate);

@@ -32,7 +32,6 @@ public class FireBaseDatabaseUtils {
     private static final String COMMENT_COUNT = "commentCount";
     private static final String COVER_IMAGE = "coverImageUrl";
     private static final String IMAGE_URL = "imageUrl";
-    private static final String IS_STAR = "star";
     private static final String OTHER_BOARD = "otherBoard";
     public static final String ARR_ACTIVITY = "arrActivity";
     private static final String DISPLAY_NAME = "displayName";
@@ -77,14 +76,6 @@ public class FireBaseDatabaseUtils {
             return starBoardRef(uid).child(boardKey).child(IMAGE_URL);
         } else {
             return unstarBoardRef(uid).child(boardKey).child(IMAGE_URL);
-        }
-    }
-
-    public static DatabaseReference boardIsStarRef(boolean isStar, String uid, String boardKey) {
-        if (isStar) {
-            return starBoardRef(uid).child(boardKey).child(IS_STAR);
-        } else {
-            return unstarBoardRef(uid).child(boardKey).child(IS_STAR);
         }
     }
 

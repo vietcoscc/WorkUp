@@ -16,7 +16,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="btnAddCard">Add card</string>
+    <string name="btn_add_card">Add card</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="display_name">Display name</string>
     <string name="action_logout">Logout</string>
@@ -30,10 +30,10 @@
     <string name="action_open">Open</string>
     <string name="action_save">Save</string>
     <string name="action_set_as_background">Set as image cover</string>
-    <string name="tvDisplayName">Display name :</string>
-    <string name="tvEmail">Email :</string>
-    <string name="tvJoindedDate">Joined date :</string>
-    <string name="tvUid">Uid :</string>
-    <string name="tvPhotoUrl">Photo url :</string>
+    <string name="tv_display_name">Display name :</string>
+    <string name="tv_email">Email :</string>
+    <string name="tv_joinded_date">Joined date :</string>
+    <string name="tv_uid">Uid :</string>
+    <string name="tv_photo_url">Photo url :</string>
     <string name="action_profile">Profile</string>
 </resources>

@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvDisplayName" />
+            android:text="@string/tv_display_name" />
 
         <TextView
             android:id="@+id/tvDisplayName"
@@ -54,7 +54,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvEmail" />
+            android:text="@string/tv_email" />
 
         <TextView
             android:id="@+id/tvEmail"
@@ -78,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvJoindedDate" />
+            android:text="@string/tv_joinded_date" />
 
         <TextView
             android:id="@+id/tvJoinedDate"
@@ -101,7 +101,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvUid" />
+            android:text="@string/tv_uid" />
 
         <TextView
             android:id="@+id/tvUid"
@@ -124,7 +124,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvPhotoUrl" />
+            android:text="@string/tv_photo_url" />
 
         <TextView
             android:id="@+id/tvPhotoUrl"

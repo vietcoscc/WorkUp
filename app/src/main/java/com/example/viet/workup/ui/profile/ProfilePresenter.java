@@ -89,20 +89,25 @@ public class ProfilePresenter<V extends ProfileMvpView> extends BasePresenter<V>
                 UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
                         .setPhotoUri(taskSnapshot.getDownloadUrl())
                         .build();
-                mAccountManager.getmAuth().getCurrentUser().updateProfile(changeRequest).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        userAccountRef(mAccountManager.getCurrentUser().getUid()).child("photoUrl").setValue(taskSnapshot.getDownloadUrl() + "");
-                        if (getmMvpView() != null) {
-                            getmMvpView().showMessge("onSuccess");
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                mAccountManager.getmAuth().getCurrentUser()
+                        .updateProfile(changeRequest)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                userAccountRef(mAccountManager.getCurrentUser().getUid())
+                                        .child("photoUrl")
+                                        .setValue(taskSnapshot.getDownloadUrl() + "");
+                                if (getmMvpView() != null) {
+                                    getmMvpView().showMessge("onSuccess");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
-                    }
-                });
+                            }
+                        });
 
             }
         })

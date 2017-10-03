@@ -40,9 +40,9 @@ public class CardMovingDialog extends BaseDialogFragment implements CardMovingMv
     private String mBoardKey;
     private String mCardListKey;
     private String mCardKey;
-    private ArrayList<String> arrCardList = new ArrayList<>();
-    private ArrayList<String> arrCardListKey = new ArrayList<>();
-    private ArrayAdapter<String> spinnerAdapter;
+    private ArrayList<String> mArrCardList = new ArrayList<>();
+    private ArrayList<String> mArrCardListKey = new ArrayList<>();
+    private ArrayAdapter<String> mSpinnerAdapter;
 
     public static CardMovingDialog newInstance(String boardkey, String cardListKey, String cardKey) {
 
@@ -73,8 +73,8 @@ public class CardMovingDialog extends BaseDialogFragment implements CardMovingMv
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_card_moving, container, false);
         ButterKnife.bind(this, view);
-        spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, arrCardList);
-        spinner.setAdapter(spinnerAdapter);
+        mSpinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, mArrCardList);
+        spinner.setAdapter(mSpinnerAdapter);
         mDialog.setView(view);
         return view;
     }
@@ -92,11 +92,11 @@ public class CardMovingDialog extends BaseDialogFragment implements CardMovingMv
                     @Override
                     public void onClick(View view) {
                         int position = (int) spinner.getSelectedItemId();
-                        if (mCardListKey.equals(arrCardListKey.get(position))) {
+                        if (mCardListKey.equals(mArrCardListKey.get(position))) {
                             Toast.makeText(mContext, "same list", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        mPresenter.onMoveCard(mBoardKey, mCardListKey, mCardKey, arrCardListKey.get(position));
+                        mPresenter.onMoveCard(mBoardKey, mCardListKey, mCardKey, mArrCardListKey.get(position));
                         mDialog.dismiss();
                     }
                 });
@@ -107,8 +107,8 @@ public class CardMovingDialog extends BaseDialogFragment implements CardMovingMv
 
     @Override
     public void showCardList(CardList cardList) {
-        arrCardList.add(cardList.getTitle());
-        arrCardListKey.add(cardList.getKey());
-        spinnerAdapter.notifyDataSetChanged();
+        mArrCardList.add(cardList.getTitle());
+        mArrCardListKey.add(cardList.getKey());
+        mSpinnerAdapter.notifyDataSetChanged();
     }
 }

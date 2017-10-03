@@ -37,7 +37,6 @@ public class LabelDialogFragment extends BaseDialogFragment implements LabelMvpV
     @Inject
     LabelMvpPresenter<LabelMvpView> mPresenter;
     private String mCardKey;
-    private DatabaseReference labelCardRef;
 
     public LabelDialogFragment() {
     }

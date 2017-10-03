@@ -78,7 +78,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_detail" />
+    <include layout="@layout/app_bar_work" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fabMenu"

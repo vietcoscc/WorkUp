@@ -22,10 +22,6 @@ public class FireBaseStorageUtils {
         return mStorage.child(AVATAR + "/" + uid + ".jpg");
     }
 
-    public static StorageReference getImageCoverThumbRef(String cardKey) {
-        return mStorage.child(IMAGE_THUMB + "/" + cardKey + ".jpg");
-    }
-
     public static void setCurrentCardKey(String currentCardKey) {
         FireBaseStorageUtils.currentCardKey = currentCardKey;
     }

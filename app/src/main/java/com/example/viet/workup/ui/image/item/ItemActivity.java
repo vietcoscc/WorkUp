@@ -74,8 +74,6 @@ public class ItemActivity extends BaseActivity implements ItemMvpView {
     }
 
     private void initPresenter() {
-//        MyApplication application = (MyApplication) getApplication();
-//        application.getActivityComponent().inject(this);
         getmActivityComponent().inject(this);
         mItemPresenter.onAttach(this);
     }
